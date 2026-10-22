@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://cxfh23rshjwh3"]
+
+[ext_resource type="Script" uid="uid://cbsv8xd4ifpsl" path="res://get_cought_point.gd" id="1_yirvn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_067gq"]
+
+[node name="get_cought_point" type="Node2D" unique_id=1594554749]
+script = ExtResource("1_yirvn")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1455214893]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=234582666]
+shape = SubResource("RectangleShape2D_067gq")
+debug_color = Color(12.623625, 5.413033, 0, 0.38431373)
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

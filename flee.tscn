@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://ch4qlufgq7rk7"]
+
+[ext_resource type="Script" uid="uid://cggls6s03qgkf" path="res://character_body_2d.gd" id="1_l1uj4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_van56"]
+size = Vector2(24, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l1uj4"]
+size = Vector2(40, 34)
+
+[node name="flee" type="Node2D" unique_id=1491559747]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=910016314]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_l1uj4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=949039259]
+shape = SubResource("RectangleShape2D_van56")
+
+[node name="fit_back area" type="Area2D" parent="CharacterBody2D" unique_id=1092258126]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D/fit_back area" unique_id=1212779076]
+position = Vector2(29, -10)
+rotation = 1.5707964
+shape = SubResource("RectangleShape2D_l1uj4")
+debug_color = Color(0.85649395, 1.973361e-06, 1.92523e-07, 0.41960785)
+
+[node name="wall_cheker" type="RayCast2D" parent="CharacterBody2D" unique_id=1600852698]
+target_position = Vector2(40, 0)
+collision_mask = 4
+
+[node name="can_turn" type="Timer" parent="CharacterBody2D" unique_id=651829929]
+wait_time = 0.5
+one_shot = true
+
+[node name="find_player" type="RayCast2D" parent="CharacterBody2D" unique_id=616472453]
+target_position = Vector2(80, 0)
+
+[connection signal="body_entered" from="CharacterBody2D/fit_back area" to="CharacterBody2D" method="_on_fit_back_area_body_entered"]
+[connection signal="timeout" from="CharacterBody2D/can_turn" to="CharacterBody2D" method="_on_can_turn_timeout"]

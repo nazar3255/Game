@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://g55fpcra7euo"]
+
+[ext_resource type="Script" uid="uid://2adl6sweavf6" path="res://player_body.gd" id="1_xhfnw"]
+[ext_resource type="Texture2D" uid="uid://b5lj8i3utqhy1" path="res://Player/photo_2026-10-21_00-11-40.jpg_20261021001918.png" id="2_kpjcp"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kpjcp"]
+height = 80.5
+
+[sub_resource type="Animation" id="Animation_e80uo"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("player_body/Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [19]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_tdg3f"]
+_data = {
+&"RESET": SubResource("Animation_e80uo")
+}
+
+[node name="Player" type="Node2D" unique_id=1427200838]
+
+[node name="player_body" type="CharacterBody2D" parent="." unique_id=1718144555]
+collision_mask = 7
+script = ExtResource("1_xhfnw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player_body" unique_id=40887738]
+position = Vector2(0, -40.25)
+shape = SubResource("CapsuleShape2D_kpjcp")
+
+[node name="Camera2D" type="Camera2D" parent="player_body" unique_id=972358351]
+offset = Vector2(0, -120)
+zoom = Vector2(2, 2)
+position_smoothing_speed = 7.0
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.15
+drag_top_margin = 0.45
+drag_right_margin = 0.15
+drag_bottom_margin = 0.15
+
+[node name="dash" type="Timer" parent="player_body" unique_id=1434372587]
+wait_time = 0.2
+one_shot = true
+
+[node name="dash_reload" type="Timer" parent="player_body" unique_id=244181070]
+wait_time = 0.5
+one_shot = true
+
+[node name="jump_in_air" type="Timer" parent="player_body" unique_id=245823520]
+process_callback = 0
+wait_time = 0.05
+one_shot = true
+
+[node name="attack_reload" type="Timer" parent="player_body" unique_id=1010709629]
+wait_time = 0.2
+
+[node name="Sprite2D" type="Sprite2D" parent="player_body" unique_id=1079698701]
+position = Vector2(2, -46)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_kpjcp")
+
+[node name="can_move" type="Timer" parent="player_body" unique_id=627189683]
+wait_time = 0.5
+one_shot = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1578046170]
+libraries/ = SubResource("AnimationLibrary_tdg3f")
+
+[connection signal="timeout" from="player_body/dash" to="player_body" method="_on_dash_timeout"]
+[connection signal="timeout" from="player_body/dash_reload" to="player_body" method="_on_dash_reload_timeout"]
+[connection signal="timeout" from="player_body/jump_in_air" to="player_body" method="_on_jump_in_air_timeout"]
+[connection signal="timeout" from="player_body/attack_reload" to="player_body" method="_on_attack_reload_timeout"]
+[connection signal="timeout" from="player_body/can_move" to="player_body" method="_on_can_move_timeout"]
