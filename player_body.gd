@@ -34,10 +34,22 @@ func take_boost():
 		
 func attack() -> void:
 	can_attack = false
+	$AnimationPlayer.play("attack")
 	$attack_reload.start()
+	$slise_effect.visible = true
+	var overlapping_bodies = $attack_box.get_overlapping_bodies()
+	for i in overlapping_bodies:
+		if i.has_method("take_damage"):
+			i.take_damage(damage)
+	
 
 func take_damage(amount) -> void:
 	hp -= amount
+
+func _ready() -> void:
+	$slise_effect.visible = false
+	$attack_box.position.x = 32 * direction
+	$slise_effect.position.x = 40 * direction
 
 
 func _physics_process(delta: float) -> void:
@@ -47,6 +59,9 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("left()") and can_move:
 		if not is_cought:
 			direction = -1
+			$attack_box.position.x = 32 * direction
+			$slise_effect.position.x = 40 * direction
+			$slise_effect.flip_h = true
 			$Sprite2D.flip_h = true
 			if is_dash == false:
 				if velocity.x > -speed:
@@ -58,7 +73,10 @@ func _physics_process(delta: float) -> void:
 	elif Input.is_action_pressed("right()") and can_move:
 		if not is_cought:
 			direction = 1
+			$attack_box.position.x = 32 * direction
+			$slise_effect.position.x = 40 * direction
 			$Sprite2D.flip_h = false
+			$slise_effect.flip_h = false
 			if is_dash == false:
 				if velocity.x < speed:
 					velocity.x += speed * delta * direction * axeleration
@@ -125,6 +143,7 @@ func _on_jump_in_air_timeout() -> void:
 
 func _on_attack_reload_timeout() -> void:
 	can_attack = true
+	$slise_effect.visible = false
 
 
 func _on_can_move_timeout() -> void:

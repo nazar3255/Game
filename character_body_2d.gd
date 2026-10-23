@@ -8,10 +8,23 @@ var axeleration = 10
 var direction = 1
 var can_turn = true
 var is_attacking = false
+var hp = 30
 
+
+func die():
+	print("mob die")
+	queue_free()
+
+func take_damage(amount):
+	print("damage taken")
+	hp -= amount
+	if hp <= 0:
+		die()
 
 func attack():
 	is_attacking = true
+	var coordinates = $find_player.get_collision_point()
+	print(coordinates)
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
