@@ -64,3 +64,4 @@ position = Vector2(-8, -96)
 start_direction = 1
 attack_type = 0
 limits_only_x = Vector2(0, 0)
+length_of_view = Vector2(256, 128)

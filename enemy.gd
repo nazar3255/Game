@@ -187,7 +187,7 @@ func check_player() -> void:
 						target_coord = target.global_position
 						attack()
 						return
-				await get_tree().create_timer(0.5 / check_eterations).timeout
+				await get_tree().create_timer(0.1 / check_eterations).timeout
 			find_player.target_position.y = 0
 			return
 
