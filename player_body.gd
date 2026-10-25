@@ -26,7 +26,7 @@ func take_push(mob_direction, pow=1) -> void:
 	if not is_cought:
 		velocity.x = 0
 		can_move = false
-		velocity.x = speed * mob_direction * 2 * pow
+		velocity.x = speed * mob_direction * 1.5 * pow
 		$can_move.start()
 		await get_tree().create_timer(0.2).timeout
 		velocity.x = 0

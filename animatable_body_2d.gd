@@ -18,11 +18,10 @@ func _ready() -> void:
 
 func setup(dir: int) -> void:
 	direction = dir
-	dir_vect = Vector2(dir, 0).normalized()
 
 func setup_vec(dir: Vector2) -> void:
-	direction = 0
 	dir_vect = (dir - Vector2(0, offset)).normalized()
+	direction = -1 if dir_vect.x < 0 else 1
 	rotation = dir_vect.angle() 
 
 func _physics_process(delta: float) -> void:
@@ -34,8 +33,7 @@ func _physics_process(delta: float) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body.has_method("is_bullet") or body.is_in_group("enemies"):
 		return
-		
 	if body.has_method("is_player"):
 		body.take_damage(damage)
-		
+		body.take_push(direction)
 	queue_free()
