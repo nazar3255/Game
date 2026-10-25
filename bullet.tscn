@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://bodyjjn3pcpg5"]
+
+[ext_resource type="Script" uid="uid://mrk580u8t4bn" path="res://animatable_body_2d.gd" id="1_v7oki"]
+[ext_resource type="Texture2D" uid="uid://dx4asivj3hufo" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="2_v8qja"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ry2dv"]
+radius = 8.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_exv2y"]
+
+[node name="bullet" type="Node2D" unique_id=1920245000]
+
+[node name="bullet" type="AnimatableBody2D" parent="." unique_id=2136656943]
+script = ExtResource("1_v7oki")
+speed = 200
+damage = 20
+time_to_fly = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="bullet" unique_id=1644669333]
+shape = SubResource("CircleShape2D_ry2dv")
+
+[node name="hitbox" type="Area2D" parent="bullet" unique_id=1126069944]
+collision_layer = 2
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="bullet/hitbox" unique_id=1411316866]
+shape = SubResource("CircleShape2D_exv2y")
+debug_color = Color(0.9685872, 5.679429e-06, 7.70092e-07, 0.41960785)
+
+[node name="Sprite2D" type="Sprite2D" parent="bullet" unique_id=22431502]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_v8qja")
+hframes = 6
+vframes = 3
+
+[connection signal="body_entered" from="bullet/hitbox" to="bullet" method="_on_hitbox_body_entered"]

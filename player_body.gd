@@ -1,35 +1,42 @@
 extends CharacterBody2D
 
 
-const speed = 250.0
-const jump_hight = -100
-var direction = 1
-var dash_speed = 70
-var axeleration = 10
-var is_dash = false
-var can_dash = true
-var can_jump = true
-var gravity_a = 9.8
-var can_attack = true
-var damage = 10
-var hp = 100
-var is_cought = false
-var can_move = true
+@export var speed: int = 250
+@export var jump_hight: int = -100
+var direction: int = 1
+@export var dash_speed: int = 70
+var axeleration: int = 10
+var is_dash: bool = false
+var can_dash: bool = true
+var can_jump: bool = true
+var can_attack: bool = true
+@export var damage: int = 10
+@export var hp: int = 100
+@export var base_gravity: float = 1000
+@export var fall_multiplier: float = 1.6
+@export var max_fall_speed: float = 800
+var is_cought: bool = false
+var can_move: bool = true
 
 
-func take_push(mob_direction):
+func is_player() -> bool:
+	return true
+
+func take_push(mob_direction, pow=1) -> void:
 	if not is_cought:
-		velocity.x += speed * mob_direction
-		velocity.y += jump_hight * 3
+		velocity.x = 0
 		can_move = false
+		velocity.x = speed * mob_direction * 2 * pow
 		$can_move.start()
+		await get_tree().create_timer(0.2).timeout
+		velocity.x = 0
 	
 func get_cought() -> void:
 	velocity.y = 0
 	is_cought = true
 	can_jump = true
 
-func take_boost():
+func take_boost() -> void:
 	velocity.x += direction * speed * 0.7
 		
 func attack() -> void:
@@ -42,19 +49,26 @@ func attack() -> void:
 		if i.has_method("take_damage"):
 			i.take_damage(damage)
 	
-
 func take_damage(amount) -> void:
 	hp -= amount
+	print(hp)
+
+func apply_gravity(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y += base_gravity * fall_multiplier * delta
+		velocity.y = min(velocity.y, max_fall_speed)
+	else:
+		velocity.y = 0.0
+
 
 func _ready() -> void:
 	$slise_effect.visible = false
 	$attack_box.position.x = 32 * direction
 	$slise_effect.position.x = 40 * direction
 
-
 func _physics_process(delta: float) -> void:
-	if not is_on_floor() and not is_cought:
-		velocity.y += gravity_a ** 2 *axeleration * delta * (1 / (gravity_a ** 2 / 100)) * 1.667
+	if not is_cought:
+		apply_gravity(delta)
 
 	if Input.is_action_pressed("left()") and can_move:
 		if not is_cought:
@@ -121,10 +135,8 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("down_dash()") and not is_on_floor() and $dash.is_stopped() and can_move:
 		velocity.y += dash_speed * 2
 		is_cought = false
+
 	move_and_slide()
-
-
-
 	if Input.is_action_just_pressed("attack()") and can_attack:
 		attack()
 
@@ -144,7 +156,6 @@ func _on_jump_in_air_timeout() -> void:
 func _on_attack_reload_timeout() -> void:
 	can_attack = true
 	$slise_effect.visible = false
-
 
 func _on_can_move_timeout() -> void:
 	can_move = true

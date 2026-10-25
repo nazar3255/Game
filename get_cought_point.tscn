@@ -8,6 +8,7 @@
 script = ExtResource("1_yirvn")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1455214893]
+collision_layer = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=234582666]
 shape = SubResource("RectangleShape2D_067gq")

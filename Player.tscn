@@ -10,6 +10,9 @@ height = 80.5
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exv2y"]
 size = Vector2(64, 80)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ry2dv"]
+size = Vector2(64, 32)
+
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ry2dv"]
 blend_mode = 1
 
@@ -103,7 +106,7 @@ _data = {
 [node name="Player" type="Node2D" unique_id=1427200838]
 
 [node name="player_body" type="CharacterBody2D" parent="." unique_id=1718144555]
-collision_mask = 7
+collision_mask = 15
 script = ExtResource("1_xhfnw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player_body" unique_id=40887738]
@@ -152,7 +155,15 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="player_body/attack_box" unique_id=464439463]
 position = Vector2(0, -40)
 shape = SubResource("RectangleShape2D_exv2y")
-debug_color = Color(0.9972053, 0, 0, 0.41960785)
+debug_color = Color(0, 0.2666664, 1, 0.41960785)
+
+[node name="attack_box_top" type="Area2D" parent="player_body" unique_id=423162868]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player_body/attack_box_top" unique_id=1585795433]
+position = Vector2(0, -96)
+shape = SubResource("RectangleShape2D_ry2dv")
+debug_color = Color(2.7915836e-05, 0.31273684, 0.8763253, 0.41960785)
 
 [node name="slise_effect" type="Sprite2D" parent="player_body" unique_id=839735196]
 z_index = 1

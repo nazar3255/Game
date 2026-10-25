@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://dxt30bo0qefd1"]
 
 [ext_resource type="PackedScene" uid="uid://g55fpcra7euo" path="res://Player.tscn" id="1_3hls8"]
-[ext_resource type="PackedScene" uid="uid://ch4qlufgq7rk7" path="res://flee.tscn" id="1_hn12h"]
 [ext_resource type="PackedScene" uid="uid://cxfh23rshjwh3" path="res://get_cought_point.tscn" id="3_hn12h"]
+[ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="3_ihfcg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ilcil"]
 size = Vector2(875, 20)
@@ -13,7 +13,7 @@ size = Vector2(20, 261)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hbghi"]
 size = Vector2(75, 20)
 
-[node name="level 1" type="Node2D" unique_id=1983597014]
+[node name="test_level" type="Node2D" unique_id=1983597014]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1291275238]
 position = Vector2(259.5, 0)
@@ -43,9 +43,6 @@ shape = SubResource("RectangleShape2D_hbghi")
 position = Vector2(195.5, -45)
 shape = SubResource("RectangleShape2D_hbghi")
 
-[node name="flee" parent="StaticBody2D/CollisionShape2D6" unique_id=1491559747 instance=ExtResource("1_hn12h")]
-position = Vector2(-2, -29)
-
 [node name="CollisionShape2D7" type="CollisionShape2D" parent="StaticBody2D" unique_id=573509812]
 position = Vector2(50.5, -45)
 shape = SubResource("RectangleShape2D_hbghi")
@@ -55,8 +52,11 @@ position = Vector2(-69.5, -165)
 shape = SubResource("RectangleShape2D_hbghi")
 
 [node name="Player" parent="." unique_id=1427200838 instance=ExtResource("1_3hls8")]
-position = Vector2(252, -8)
+position = Vector2(120, -8)
 
 [node name="get_cought_point" parent="." unique_id=1594554749 instance=ExtResource("3_hn12h")]
 position = Vector2(-159.635, -177.68)
 scale = Vector2(0.5, 8.495)
+
+[node name="Enemy" parent="." unique_id=396613334 instance=ExtResource("3_ihfcg")]
+position = Vector2(0, -128)
