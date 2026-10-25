@@ -53,10 +53,15 @@ shape = SubResource("RectangleShape2D_hbghi")
 
 [node name="Player" parent="." unique_id=1427200838 instance=ExtResource("1_3hls8")]
 position = Vector2(120, -8)
+damage = 20
 
 [node name="get_cought_point" parent="." unique_id=1594554749 instance=ExtResource("3_hn12h")]
 position = Vector2(-159.635, -177.68)
 scale = Vector2(0.5, 8.495)
 
-[node name="Enemy" parent="." unique_id=396613334 instance=ExtResource("3_ihfcg")]
-position = Vector2(0, -128)
+[node name="Enemy" parent="." unique_id=644901586 instance=ExtResource("3_ihfcg")]
+position = Vector2(-8, -96)
+move_type = 1
+start_direction = 1
+attack_type = 0
+limits_only_x = Vector2(0, 0)

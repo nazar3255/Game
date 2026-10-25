@@ -21,6 +21,7 @@ var current_state: States = States.CALM
 @export var player_check: Timer
 @export var find_player: RayCast2D
 @export var bullet: PackedScene
+@export var bullet_spawn: Marker2D
 
 
 @export var height_of_flying: int = 100
@@ -35,6 +36,7 @@ var current_state: States = States.CALM
 @export var max_fall_speed: float = 800
 @export var jump_time: float = 0.5
 @export var attack_distance: int = 60
+@export var use_gravity: bool = true
 var direction: int = 1
 @export var damage: int = 10
 @export var hp: int = 10
@@ -65,10 +67,17 @@ func change_direction(dir=0) -> void:
 		direction = clamp(dir, -1, 1)
 	else:
 		direction *= -1
+		bullet_spawn.position.x = direction * 8
 	wall_checker.target_position.x = direction * 40
 	find_player.target_position.x = length_of_view.x * direction
 	can_turn = false
 	can_make_turn.start()
+
+func get_player_pos() -> Vector2:
+	var player = get_tree().get_first_node_in_group("player") as Node2D
+	if player:
+		return player.global_position
+	return Vector2.ZERO
 
 func calculate_velocity(target_pos: Vector2, time) -> Vector2:
 	var vel_x = (target_pos.x - global_position.x) / time
@@ -77,13 +86,26 @@ func calculate_velocity(target_pos: Vector2, time) -> Vector2:
 
 func shot() -> void:
 	if not bullet:
-		print("Bullet dont install")
+		print("Bullet scene is null!")
 		return
 	if move_type == Types_of_move.FLYING:
-		var current_bullet = bullet.instantiate()
-		current_bullet.get_info(direction, global_position.y)
-		current_bullet.global_position.x = global_position.x
-		get_parent().add_child(current_bullet)
+		var b = bullet.instantiate()
+		get_parent().add_child(b)
+		if bullet_spawn:
+			b.global_position = bullet_spawn.global_position
+		else:
+			b.global_position = global_position
+		var player = get_tree().get_first_node_in_group("player") as Node2D
+		var dir = player.global_position - global_position
+		b.setup_vec(dir)
+	else:
+		var b = bullet.instantiate()
+		get_parent().add_child(b)
+		if bullet_spawn:
+			b.global_position = bullet_spawn.global_position
+		else:
+			b.global_position = global_position
+		b.setup(direction)
 
 func bite() -> void:
 	if move_type == Types_of_move.NORMAL:
@@ -94,9 +116,10 @@ func bite() -> void:
 		await get_tree().create_timer(jump_time).timeout
 		velocity.x = 0
 		var target = find_player.get_collider()
+		var dist
 		if target and target.has_method("is_player"):
 			target_coord = target.global_position
-		var dist = abs(global_position.x - target.global_position.x)
+			dist = abs(global_position.x - target.global_position.x)
 		print(dist)
 		if target:
 			await get_tree().create_timer(0.2).timeout
@@ -108,12 +131,13 @@ func bite() -> void:
 		dir_to_player = dir_to_player.normalized()
 		velocity = dir_to_player * (speed * 3)
 		await get_tree().create_timer(0.5).timeout
-		var target = find_player.get_collider()
-		if target and target.has_method("is_player"):
-			var dist = abs(global_position.x - target.global_position.x)
-			print(dist)
-			if dist <= attack_distance:
-				target.take_damage(damage)
+		var player = get_tree().get_first_node_in_group("player") as Node2D
+		if player:
+			var dist_x = abs(global_position.x - player.global_position.x)
+			print("Відстань по X: ", dist_x)
+			if dist_x <= attack_distance:
+				if player.has_method("take_damage"):
+					player.take_damage(damage)
 		velocity = Vector2(direction * speed, -speed * 2)
 		await get_tree().create_timer(0.2).timeout
 		velocity = Vector2.ZERO
@@ -132,7 +156,7 @@ func attack() -> void:
 			Types_of_attack.BITE:
 				bite()
 			Types_of_attack.SHOT:
-				pass
+				shot()
 
 func die() -> void:
 	print("mob die")
@@ -209,6 +233,7 @@ func apply_gravity(delta: float) -> void:
 
 
 func _ready() -> void:
+	add_to_group("enemies")
 	if limits_only_x != Vector2(0,0):
 		if global_position.x < limits_only_x.x or global_position.x > limits_only_x.y:
 			global_position.x = (limits_only_x.x + limits_only_x.y) / 2
@@ -218,12 +243,13 @@ func _ready() -> void:
 		direction = -1
 	else:
 		direction = 1
+	bullet_spawn.position.x = direction * 8
 	find_player.target_position.x = length_of_view.x * direction
 	wall_checker.target_position.x = direction * 40
 	check_proces.start()
 
 func _physics_process(delta: float) -> void:
-	if move_type == Types_of_move.NORMAL:
+	if move_type != Types_of_move.FLYING and use_gravity:
 		apply_gravity(delta)
 	move()
 	move_and_slide()

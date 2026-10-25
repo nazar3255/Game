@@ -6,14 +6,10 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ry2dv"]
 size = Vector2(16, 16)
 
-[node name="Enemy" type="Node2D" unique_id=396613334]
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="." unique_id=644901586 node_paths=PackedStringArray("wall_checker", "check_proces", "can_make_turn", "reload_attack", "player_check", "find_player")]
+[node name="Enemy" type="CharacterBody2D" unique_id=644901586 node_paths=PackedStringArray("wall_checker", "check_proces", "can_make_turn", "reload_attack", "player_check", "find_player", "bullet_spawn")]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_7k104")
-move_type = 1
-start_direction = 1
 attack_type = 1
 wall_checker = NodePath("wall_cheker")
 check_proces = NodePath("check_proces")
@@ -22,37 +18,43 @@ reload_attack = NodePath("attack_reload")
 player_check = NodePath("player_check")
 find_player = NodePath("RayCast2D")
 bullet = ExtResource("2_4gyqm")
+bullet_spawn = NodePath("bullet_spawn")
 limits_only_x = Vector2(-100, 200)
 limits_sensitivity = 70
 jump_time = 0.4
 attack_distance = 40
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1997042106]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1997042106]
 shape = SubResource("RectangleShape2D_ry2dv")
 
-[node name="can_turn" type="Timer" parent="CharacterBody2D" unique_id=488102809]
+[node name="can_turn" type="Timer" parent="." unique_id=488102809]
 wait_time = 0.2
 one_shot = true
 
-[node name="wall_cheker" type="RayCast2D" parent="CharacterBody2D" unique_id=698019469]
+[node name="wall_cheker" type="RayCast2D" parent="." unique_id=698019469]
 target_position = Vector2(40, 0)
 collision_mask = 2147483652
 
-[node name="check_proces" type="Timer" parent="CharacterBody2D" unique_id=25773075]
+[node name="check_proces" type="Timer" parent="." unique_id=25773075]
 wait_time = 0.5
 
-[node name="attack_reload" type="Timer" parent="CharacterBody2D" unique_id=429386826]
+[node name="attack_reload" type="Timer" parent="." unique_id=429386826]
 wait_time = 2.0
 one_shot = true
 
-[node name="RayCast2D" type="RayCast2D" parent="CharacterBody2D" unique_id=1141097175]
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1141097175]
 target_position = Vector2(128, 0)
 
-[node name="player_check" type="Timer" parent="CharacterBody2D" unique_id=428496835]
+[node name="player_check" type="Timer" parent="." unique_id=428496835]
 wait_time = 0.5
 one_shot = true
 
-[connection signal="timeout" from="CharacterBody2D/can_turn" to="CharacterBody2D" method="_on_can_turn_timeout"]
-[connection signal="timeout" from="CharacterBody2D/check_proces" to="CharacterBody2D" method="_on_check_proces_timeout"]
-[connection signal="timeout" from="CharacterBody2D/attack_reload" to="CharacterBody2D" method="_on_attack_reload_timeout"]
-[connection signal="timeout" from="CharacterBody2D/player_check" to="CharacterBody2D" method="_on_player_check_timeout"]
+[node name="Enemy" type="Node2D" parent="." unique_id=396613334]
+
+[node name="bullet_spawn" type="Marker2D" parent="." unique_id=276558598]
+position = Vector2(8, -8)
+
+[connection signal="timeout" from="can_turn" to="." method="_on_can_turn_timeout"]
+[connection signal="timeout" from="check_proces" to="." method="_on_check_proces_timeout"]
+[connection signal="timeout" from="attack_reload" to="." method="_on_attack_reload_timeout"]
+[connection signal="timeout" from="player_check" to="." method="_on_player_check_timeout"]

@@ -1,37 +1,41 @@
-class_name Bulet
-extends AnimatableBody2D
+class_name Bullet
+extends Area2D
 
+@export var speed: float = 300.0
+@export var damage: int = 10
+@export var time_to_fly: float = 3.0
+@export var offset: int = 10
 
-@export var speed: int
-@export var damage: int
-@export var time_to_fly: int
-var direction: int
+var direction: int = 0
+var dir_vect: Vector2 = Vector2.ZERO
 
+func is_bullet() -> bool:
+	return true
 
-
-func spawn() -> void:
+func _ready() -> void:
 	await get_tree().create_timer(time_to_fly).timeout
 	queue_free()
 
-func get_info(dir,hei) -> void:
-	global_position.y = hei
+func setup(dir: int) -> void:
 	direction = dir
+	dir_vect = Vector2(dir, 0).normalized()
 
-func move(dir, del) -> void:
-	global_position.x += speed * dir * del
+func setup_vec(dir: Vector2) -> void:
+	direction = 0
+	dir_vect = (dir - Vector2(0, offset)).normalized()
+	rotation = dir_vect.angle() 
 
+func _physics_process(delta: float) -> void:
+	if direction != 0:
+		global_position.x += speed * direction * delta
+	elif dir_vect != Vector2.ZERO:
+		global_position += dir_vect * speed * delta
 
-func _ready() -> void:
-	spawn()
-
-func _physics_process(delta) -> void:
-	move(direction, delta)
-
-
-
-func _on_hitbox_body_entered(body: Node2D) -> void:
+func _on_body_entered(body: Node2D) -> void:
+	if body.has_method("is_bullet") or body.is_in_group("enemies"):
+		return
+		
 	if body.has_method("is_player"):
-		print("hit")
 		body.take_damage(damage)
-		body.take_push(direction)
-		queue_free()
+		
+	queue_free()

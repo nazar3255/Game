@@ -62,6 +62,7 @@ func apply_gravity(delta: float) -> void:
 
 
 func _ready() -> void:
+	add_to_group("player")
 	$slise_effect.visible = false
 	$attack_box.position.x = 32 * direction
 	$slise_effect.position.x = 40 * direction
