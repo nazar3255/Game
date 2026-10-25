@@ -96,21 +96,29 @@ func bite() -> void:
 		var target = find_player.get_collider()
 		if target and target.has_method("is_player"):
 			target_coord = target.global_position
-		var dist = global_position.distance_to(target_coord)
+		var dist = abs(global_position.x - target.global_position.x)
 		print(dist)
 		if target:
-			if dist <+ attack_distance and target.global_position.x * direction > global_position.x * direction:
-				await get_tree().create_timer(0.2).timeout
+			await get_tree().create_timer(0.2).timeout
+			if dist <= attack_distance and target.global_position.x * direction > global_position.x * direction:
 				target.take_damage(damage)
 	if move_type == Types_of_move.FLYING:
 		var dir_to_player = global_position.direction_to(target_coord)
-		dir_to_player.x += 1 * direction
-		velocity = dir_to_player * (speed * 2)
-		await get_tree().create_timer(0.25).timeout
-		velocity = Vector2(direction * speed, -speed)
-		await get_tree().create_timer(0.25).timeout
+		dir_to_player.x += 0.5 * direction
+		dir_to_player = dir_to_player.normalized()
+		velocity = dir_to_player * (speed * 3)
+		await get_tree().create_timer(0.5).timeout
+		var target = find_player.get_collider()
+		if target and target.has_method("is_player"):
+			var dist = abs(global_position.x - target.global_position.x)
+			print(dist)
+			if dist <= attack_distance:
+				target.take_damage(damage)
+		velocity = Vector2(direction * speed, -speed * 2)
+		await get_tree().create_timer(0.2).timeout
 		velocity = Vector2.ZERO
 		current_state = States.CALM
+		
 	
 func attack() -> void:
 	current_state = States.ATTACK

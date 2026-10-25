@@ -23,8 +23,9 @@ player_check = NodePath("player_check")
 find_player = NodePath("RayCast2D")
 bullet = ExtResource("2_4gyqm")
 limits_only_x = Vector2(-100, 200)
-limits_sensitivity = 50
+limits_sensitivity = 70
 jump_time = 0.4
+attack_distance = 40
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D" unique_id=1997042106]
 shape = SubResource("RectangleShape2D_ry2dv")
