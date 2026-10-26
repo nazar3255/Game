@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://y3sknp0348vl"]
+
+[ext_resource type="Script" uid="uid://dteij16uc0vqa" path="res://hud.gd" id="1_37p78"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37p78"]
+bg_color = Color(0.1985591, 0.1985591, 0.1985591, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_64ctp"]
+bg_color = Color(0.028333306, 0.85, 0, 1)
+
+[node name="hud" type="CanvasLayer" unique_id=2029827234 node_paths=PackedStringArray("helth_bar", "pause_menu")]
+layer = 10
+script = ExtResource("1_37p78")
+helth_bar = NodePath("Control/HealthBar")
+pause_menu = NodePath("Control/Menu_Pause")
+
+[node name="Control" type="Control" parent="." unique_id=1033053351]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HealthBar" type="ProgressBar" parent="Control" unique_id=82411848]
+visibility_layer = 7
+layout_mode = 0
+offset_right = 192.0
+offset_bottom = 27.0
+theme_override_styles/background = SubResource("StyleBoxFlat_37p78")
+theme_override_styles/fill = SubResource("StyleBoxFlat_64ctp")
+step = 1.0
+show_percentage = false
+
+[node name="Menu_Pause" type="Control" parent="Control" unique_id=1902970836]
+process_mode = 2
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -7.0
+offset_bottom = 151.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="ColorRect" type="ColorRect" parent="Control/Menu_Pause" unique_id=748558544]
+layout_mode = 0
+offset_top = -1.0
+offset_right = 79.0
+offset_bottom = 66.0
+color = Color(0, 0, 0, 0.47058824)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Menu_Pause" unique_id=133493919]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Continue_Button" type="Button" parent="Control/Menu_Pause/VBoxContainer" unique_id=2091571635]
+layout_mode = 2
+text = "Continue"
+
+[node name="Quit_Button" type="Button" parent="Control/Menu_Pause/VBoxContainer" unique_id=731015909]
+layout_mode = 2
+text = "Quit"

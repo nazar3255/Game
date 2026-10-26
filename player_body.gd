@@ -1,7 +1,8 @@
 extends CharacterBody2D
 
-@onready var health_bar = $CanvasLayer/HealthBar
 
+@export var hud: PackedScene
+var hud_instance: CanvasLayer
 @export var speed: int = 250
 @export var jump_hight: int = -100
 var direction: int = 1
@@ -12,12 +13,13 @@ var can_dash: bool = true
 var can_jump: bool = true
 var can_attack: bool = true
 @export var damage: int = 10
-@export var hp: int = 100
+@export var max_hp: int = 100
 @export var base_gravity: float = 1000
 @export var fall_multiplier: float = 1.6
 @export var max_fall_speed: float = 800
 var is_cought: bool = false
 var can_move: bool = true
+var hp: int
 
 
 func is_player() -> bool:
@@ -52,8 +54,9 @@ func attack() -> void:
 	
 func take_damage(amount) -> void:
 	hp -= amount
-	hp = clamp(hp, 0, health_bar.max_value)
-	health_bar.value = hp
+	hp = clamp(hp, 0, max_hp)
+	#оновлений варіант
+	hud_instance.set_hp(hp)
 	print(hp)
 
 func apply_gravity(delta: float) -> void:
@@ -65,8 +68,17 @@ func apply_gravity(delta: float) -> void:
 
 
 func _ready() -> void:
-	health_bar.max_value = hp
-	health_bar.value = hp
+	hp = max_hp
+	if hud:
+		hud_instance = hud.instantiate()
+		add_child(hud_instance)
+		hud_instance.visible = true
+
+	#дані передаються через функціЇ set_назва того що передаєш()
+	#на початку обов'язково оновити всі дані
+	hud_instance.set_hp(hp)
+	# health_bar.max_value = hp
+	# health_bar.value = hp
 
 	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
 	if menu:
