@@ -74,6 +74,39 @@ theme_override_styles/background = SubResource("StyleBoxFlat_wkour")
 theme_override_styles/fill = SubResource("StyleBoxFlat_hn12h")
 show_percentage = false
 
+[node name="Menu_Pause" type="Control" parent="Player/CanvasLayer" unique_id=23728005]
+process_mode = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = -151.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="ColorRect" type="ColorRect" parent="Player/CanvasLayer/Menu_Pause" unique_id=679052907]
+layout_mode = 0
+offset_top = -1.0
+offset_right = 79.0
+offset_bottom = 66.0
+color = Color(0, 0, 0, 0.47058824)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Player/CanvasLayer/Menu_Pause" unique_id=1913908597]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Continue_Button" type="Button" parent="Player/CanvasLayer/Menu_Pause/VBoxContainer" unique_id=1348384711]
+layout_mode = 2
+text = "Continue"
+
+[node name="Quit_Button" type="Button" parent="Player/CanvasLayer/Menu_Pause/VBoxContainer" unique_id=980440864]
+layout_mode = 2
+text = "Quit"
+
 [node name="get_cought_point" parent="." unique_id=1594554749 instance=ExtResource("3_hn12h")]
 position = Vector2(-159.635, -177.68)
 scale = Vector2(0.5, 8.495)
@@ -83,3 +116,6 @@ position = Vector2(-8, -96)
 start_direction = 1
 attack_type = 0
 limits_only_x = Vector2(0, 0)
+
+[connection signal="pressed" from="Player/CanvasLayer/Menu_Pause/VBoxContainer/Continue_Button" to="Player" method="_on_continue_button_pressed"]
+[connection signal="pressed" from="Player/CanvasLayer/Menu_Pause/VBoxContainer/Quit_Button" to="Player" method="_on_quit_button_pressed"]

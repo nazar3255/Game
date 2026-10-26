@@ -67,11 +67,23 @@ func apply_gravity(delta: float) -> void:
 func _ready() -> void:
 	health_bar.max_value = hp
 	health_bar.value = hp
-	health_bar.visible = true
-	health_bar.top_level = true
-	health_bar.position = Vector2(50, 50) 
-	health_bar.size = Vector2(200, 20)
+
+	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
+	if menu:
+		menu.visible = false
+		menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		
+		var bg = menu.get_node_or_null("ColorRect")
+		if bg:
+			bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			bg.color = Color(0, 0, 0, 0.5)
+			
+		var box = menu.get_node_or_null("VBoxContainer")
+		if box:
+			box.set_anchors_and_offsets_preset(Control.PRESET_CENTER) # Кнопки точно в центр
+			box.size = Vector2(250, 100) # Даємо кнопкам нормальний розмі
 	
+
 	add_to_group("player")
 	$slise_effect.visible = false
 	$attack_box.position.x = 32 * direction
@@ -80,6 +92,23 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not is_cought:
 		apply_gravity(delta)
+
+	if Input.is_physical_key_pressed(KEY_ESCAPE):
+		var menu = get_tree().current_scene.find_child("Menu_Pause", true, false)
+		if menu and not menu.visible:
+			menu.visible = true
+			get_tree().paused = true
+			
+			var btn = menu.find_child("*Continue*", true, false)
+			if btn: 
+				btn.grab_focus()
+
+	if Input.is_action_just_pressed("ui_cancel"):
+		var menu = get_node_or_null("CanvasLayer/Menu_Pause")
+		if menu:
+			menu.visible = !menu.visible
+			get_tree().paused = menu.visible
+
 
 	if Input.is_action_pressed("left()") and can_move:
 		if not is_cought:
@@ -170,3 +199,13 @@ func _on_attack_reload_timeout() -> void:
 
 func _on_can_move_timeout() -> void:
 	can_move = true
+	
+func _on_continue_button_pressed() -> void:
+	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
+	if menu:
+		menu.visible = false
+		get_tree().paused = false
+
+func _on_quit_button_pressed() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://main_menu.tscn")
