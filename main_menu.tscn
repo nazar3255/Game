@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://b778wu5225j8r"]
+
+[ext_resource type="Script" uid="uid://nm7xm5tc6hcs" path="res://Main_Menu.gd" id="1_06t4h"]
+[ext_resource type="PackedScene" uid="uid://dxt30bo0qefd1" path="res://level_1.tscn" id="2_7vrkn"]
+
+[node name="Main_Menu" type="Control" unique_id=1426669237]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_06t4h")
+game_scene = ExtResource("2_7vrkn")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1627683602]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Play_Button" type="Button" parent="VBoxContainer" unique_id=1862974478]
+layout_mode = 2
+text = "Play"
+
+[node name="Settings_Button" type="Button" parent="VBoxContainer" unique_id=806333957]
+layout_mode = 2
+text = "Settings"
+
+[node name="Exit_Button" type="Button" parent="VBoxContainer" unique_id=832309048]
+layout_mode = 2
+text = "Exit"
+
+[connection signal="pressed" from="VBoxContainer/Play_Button" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Settings_Button" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Exit_Button" to="." method="_on_exit_button_pressed"]

@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+@onready var health_bar = $CanvasLayer/HealthBar
 
 @export var speed: int = 250
 @export var jump_hight: int = -100
@@ -51,6 +52,8 @@ func attack() -> void:
 	
 func take_damage(amount) -> void:
 	hp -= amount
+	hp = clamp(hp, 0, health_bar.max_value)
+	health_bar.value = hp
 	print(hp)
 
 func apply_gravity(delta: float) -> void:
@@ -62,6 +65,13 @@ func apply_gravity(delta: float) -> void:
 
 
 func _ready() -> void:
+	health_bar.max_value = hp
+	health_bar.value = hp
+	health_bar.visible = true
+	health_bar.top_level = true
+	health_bar.position = Vector2(50, 50) 
+	health_bar.size = Vector2(200, 20)
+	
 	add_to_group("player")
 	$slise_effect.visible = false
 	$attack_box.position.x = 32 * direction

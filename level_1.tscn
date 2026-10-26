@@ -13,6 +13,12 @@ size = Vector2(20, 261)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hbghi"]
 size = Vector2(75, 20)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wkour"]
+bg_color = Color(0.1985591, 0.1985591, 0.1985591, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hn12h"]
+bg_color = Color(0.028333306, 0.85, 0, 1)
+
 [node name="test_level" type="Node2D" unique_id=1983597014]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1291275238]
@@ -54,6 +60,19 @@ shape = SubResource("RectangleShape2D_hbghi")
 [node name="Player" parent="." unique_id=1427200838 instance=ExtResource("1_3hls8")]
 position = Vector2(120, -8)
 damage = 20
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Player" unique_id=177772480]
+layer = 100
+
+[node name="HealthBar" type="ProgressBar" parent="Player/CanvasLayer" unique_id=2090679266]
+visibility_layer = 7
+offset_left = 92.0
+offset_top = -150.0
+offset_right = 154.0
+offset_bottom = -123.0
+theme_override_styles/background = SubResource("StyleBoxFlat_wkour")
+theme_override_styles/fill = SubResource("StyleBoxFlat_hn12h")
+show_percentage = false
 
 [node name="get_cought_point" parent="." unique_id=1594554749 instance=ExtResource("3_hn12h")]
 position = Vector2(-159.635, -177.68)
