@@ -77,24 +77,7 @@ func _ready() -> void:
 	#дані передаються через функціЇ set_назва того що передаєш()
 	#на початку обов'язково оновити всі дані
 	hud_instance.set_hp(hp)
-	# health_bar.max_value = hp
-	# health_bar.value = hp
 
-	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
-	if menu:
-		menu.visible = false
-		menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		
-		var bg = menu.get_node_or_null("ColorRect")
-		if bg:
-			bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			bg.color = Color(0, 0, 0, 0.5)
-			
-		var box = menu.get_node_or_null("VBoxContainer")
-		if box:
-			box.set_anchors_and_offsets_preset(Control.PRESET_CENTER) # Кнопки точно в центр
-			box.size = Vector2(250, 100) # Даємо кнопкам нормальний розмі
-	
 
 	add_to_group("player")
 	$slise_effect.visible = false
@@ -106,14 +89,8 @@ func _physics_process(delta: float) -> void:
 		apply_gravity(delta)
 
 	if Input.is_physical_key_pressed(KEY_ESCAPE):
-		var menu = get_tree().current_scene.find_child("Menu_Pause", true, false)
-		if menu and not menu.visible:
-			menu.visible = true
-			get_tree().paused = true
-			
-			var btn = menu.find_child("*Continue*", true, false)
-			if btn: 
-				btn.grab_focus()
+		if get_tree().paused == false:
+			hud_instance.pause()
 
 	if Input.is_action_just_pressed("ui_cancel"):
 		var menu = get_node_or_null("CanvasLayer/Menu_Pause")
