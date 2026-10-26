@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://g55fpcra7euo"]
 
 [ext_resource type="Script" uid="uid://2adl6sweavf6" path="res://player_body.gd" id="1_xhfnw"]
+[ext_resource type="PackedScene" uid="uid://y3sknp0348vl" path="res://hud.tscn" id="2_e80uo"]
 [ext_resource type="Texture2D" uid="uid://b5lj8i3utqhy1" path="res://Player/photo_2026-10-21_00-11-40.jpg_20261021001918.png" id="2_kpjcp"]
 [ext_resource type="Texture2D" uid="uid://by47dndied0wb" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="3_kne1u"]
 
@@ -58,6 +59,7 @@ _data = {
 [node name="player_body" type="CharacterBody2D" unique_id=1718144555]
 collision_mask = 15
 script = ExtResource("1_xhfnw")
+hud = ExtResource("2_e80uo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=40887738]
 position = Vector2(0, -40.25)

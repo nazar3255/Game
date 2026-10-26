@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
 
+@export var hud: PackedScene
+var hud_instance: CanvasLayer
 @export var speed: int = 250
 @export var jump_hight: int = -100
 var direction: int = 1
@@ -11,12 +13,13 @@ var can_dash: bool = true
 var can_jump: bool = true
 var can_attack: bool = true
 @export var damage: int = 10
-@export var hp: int = 100
+@export var max_hp: int = 100
 @export var base_gravity: float = 1000
 @export var fall_multiplier: float = 1.6
 @export var max_fall_speed: float = 800
 var is_cought: bool = false
 var can_move: bool = true
+var hp: int
 
 
 func is_player() -> bool:
@@ -51,6 +54,9 @@ func attack() -> void:
 	
 func take_damage(amount) -> void:
 	hp -= amount
+	hp = clamp(hp, 0, max_hp)
+	#оновлений варіант
+	hud_instance.set_hp(hp)
 	print(hp)
 
 func apply_gravity(delta: float) -> void:
@@ -62,6 +68,17 @@ func apply_gravity(delta: float) -> void:
 
 
 func _ready() -> void:
+	hp = max_hp
+	if hud:
+		hud_instance = hud.instantiate()
+		add_child(hud_instance)
+		hud_instance.visible = true
+
+	#дані передаються через функціЇ set_назва того що передаєш()
+	#на початку обов'язково оновити всі дані
+	hud_instance.set_hp(hp)
+
+
 	add_to_group("player")
 	$slise_effect.visible = false
 	$attack_box.position.x = 32 * direction
@@ -70,6 +87,17 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not is_cought:
 		apply_gravity(delta)
+
+	if Input.is_physical_key_pressed(KEY_ESCAPE):
+		if get_tree().paused == false:
+			hud_instance.pause()
+
+	if Input.is_action_just_pressed("ui_cancel"):
+		var menu = get_node_or_null("CanvasLayer/Menu_Pause")
+		if menu:
+			menu.visible = !menu.visible
+			get_tree().paused = menu.visible
+
 
 	if Input.is_action_pressed("left()") and can_move:
 		if not is_cought:
@@ -160,3 +188,13 @@ func _on_attack_reload_timeout() -> void:
 
 func _on_can_move_timeout() -> void:
 	can_move = true
+	
+func _on_continue_button_pressed() -> void:
+	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
+	if menu:
+		menu.visible = false
+		get_tree().paused = false
+
+func _on_quit_button_pressed() -> void:
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://main_menu.tscn")
