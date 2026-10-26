@@ -16,7 +16,7 @@ check_proces = NodePath("check_proces")
 can_make_turn = NodePath("can_turn")
 reload_attack = NodePath("attack_reload")
 player_check = NodePath("player_check")
-find_player = NodePath("RayCast2D")
+find_player = NodePath("player_check_ray")
 bullet = ExtResource("2_4gyqm")
 bullet_spawn = NodePath("bullet_spawn")
 limits_only_x = Vector2(-100, 200)
@@ -42,8 +42,9 @@ wait_time = 0.5
 wait_time = 2.0
 one_shot = true
 
-[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1141097175]
+[node name="player_check_ray" type="RayCast2D" parent="." unique_id=1141097175]
 target_position = Vector2(128, 0)
+collision_mask = 5
 
 [node name="player_check" type="Timer" parent="." unique_id=428496835]
 wait_time = 0.5

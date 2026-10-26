@@ -5,6 +5,7 @@ extends Area2D
 @export var damage: int = 10
 @export var time_to_fly: float = 3.0
 @export var offset: int = 10
+var vect: bool = false
 
 var direction: int = 0
 var dir_vect: Vector2 = Vector2.ZERO
@@ -21,13 +22,15 @@ func setup(dir: int) -> void:
 
 func setup_vec(dir: Vector2) -> void:
 	dir_vect = (dir - Vector2(0, offset)).normalized()
+	print("direction", dir_vect, dir)
 	direction = -1 if dir_vect.x < 0 else 1
-	rotation = dir_vect.angle() 
+	rotation = dir_vect.angle()
+	vect = true
 
 func _physics_process(delta: float) -> void:
-	if direction != 0:
+	if not vect:
 		global_position.x += speed * direction * delta
-	elif dir_vect != Vector2.ZERO:
+	elif vect:
 		global_position += dir_vect * speed * delta
 
 func _on_body_entered(body: Node2D) -> void:

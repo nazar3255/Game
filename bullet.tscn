@@ -1,12 +1,14 @@
 [gd_scene format=3 uid="uid://bodyjjn3pcpg5"]
 
 [ext_resource type="Script" uid="uid://mrk580u8t4bn" path="res://animatable_body_2d.gd" id="1_v7oki"]
-[ext_resource type="Texture2D" uid="uid://dx4asivj3hufo" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="2_v8qja"]
+[ext_resource type="Texture2D" uid="uid://by47dndied0wb" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="2_v8qja"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ry2dv"]
 radius = 8.0
 
 [node name="bullet" type="Area2D" unique_id=1632553067]
+collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_v7oki")
 damage = 20
 time_to_fly = 1.0

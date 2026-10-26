@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 
 enum Types_of_move {NORMAL, FLYING, STATIC}
-enum Types_of_attack {SHOT, BITE, }
+enum Types_of_attack {SHOT_DIRECT, SHOT_VECTOR, BITE, }
 enum Directions {RIGHT, LEFT}
 enum States {CALM, ATTACK}
 
@@ -84,28 +84,31 @@ func calculate_velocity(target_pos: Vector2, time) -> Vector2:
 	var vel_y = ((target_pos.y - global_position.y) - 0.5 * g * time * time) / time
 	return Vector2(vel_x, vel_y)
 
-func shot() -> void:
+func shot_vector() -> void:
 	if not bullet:
 		print("Bullet scene is null!")
 		return
-	if move_type == Types_of_move.FLYING:
-		var b = bullet.instantiate()
-		get_parent().add_child(b)
-		if bullet_spawn:
-			b.global_position = bullet_spawn.global_position
-		else:
-			b.global_position = global_position
-		var player = get_tree().get_first_node_in_group("player") as Node2D
-		var dir = player.global_position - global_position
-		b.setup_vec(dir)
+	var b = bullet.instantiate()
+	get_parent().add_child(b)
+	if bullet_spawn:
+		b.global_position = bullet_spawn.global_position
 	else:
-		var b = bullet.instantiate()
-		get_parent().add_child(b)
-		if bullet_spawn:
-			b.global_position = bullet_spawn.global_position
-		else:
-			b.global_position = global_position
-		b.setup(direction)
+		b.global_position = global_position
+	var player = get_tree().get_first_node_in_group("player") as Node2D
+	var dir = player.global_position - global_position
+	b.setup_vec(dir)
+
+func shot_direct() -> void:
+	if not bullet:
+		print("Bullet scene is null!")
+		return
+	var b = bullet.instantiate()
+	get_parent().add_child(b)
+	if bullet_spawn:
+		b.global_position = bullet_spawn.global_position
+	else:
+		b.global_position = global_position
+	b.setup(direction)
 
 func bite() -> void:
 	if move_type == Types_of_move.NORMAL:
@@ -155,8 +158,10 @@ func attack() -> void:
 		match attack_type:
 			Types_of_attack.BITE:
 				bite()
-			Types_of_attack.SHOT:
-				shot()
+			Types_of_attack.SHOT_DIRECT:
+				shot_direct()
+			Types_of_attack.SHOT_VECTOR:
+				shot_vector()
 
 func die() -> void:
 	print("mob die")
@@ -270,5 +275,9 @@ func _on_attack_reload_timeout() -> void:
 
 
 func _on_player_check_timeout() -> void:
-	if not find_player.is_colliding():
+	if find_player.is_colliding():
+		var target = find_player.get_collider()
+		if target and not target.has_method("is_player"):
+			current_state = States.CALM
+	elif not find_player.is_colliding():
 		current_state = States.CALM
