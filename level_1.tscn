@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cxfh23rshjwh3" path="res://get_cought_point.tscn" id="3_hn12h"]
 [ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="3_ihfcg"]
 [ext_resource type="PackedScene" uid="uid://blrukf6sr1di8" path="res://trowble.tscn" id="4_ihfcg"]
+[ext_resource type="Script" uid="uid://dcqxn1g1ahlof" path="res://bombiniguzini.gd" id="5_rka8t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ilcil"]
 size = Vector2(875, 20)
@@ -14,7 +15,63 @@ size = Vector2(20, 261)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hbghi"]
 size = Vector2(75, 24)
 
+[sub_resource type="GDScript" id="GDScript_rka8t"]
+script/source = "extends \"res://enemy.gd\"
+
+@export var trigger_distance: float = 75.0
+@export var bomb_damage: int = 50
+
+@onready var bomb_radius: Area2D = $BombaVzruvChechna
+
+var is_exploding: bool = false
+var player_target: Node2D = null
+
+func _ready() -> void:
+	player_target = get_tree().current_scene.get_node_or_null(\"Player\")
+	if \"player\" in self:
+		self.player = player_target
+	elif \"target\" in self:
+		self.target = player_target
+
+func _process(delta: float) -> void:
+	if player_target and not is_exploding:
+		var distance = global_position.distance_to(player_target.global_position)
+		if distance <= trigger_distance:
+			start_countdown()
+
+func _physics_process(delta: float) -> void:
+	if super.has_method(\"_physics_process\"):
+		super(delta)
+
+@export var knockback_power: float = 800.0
+
+func start_countdown():
+	is_exploding = true
+	
+	if \"speed\" in self: self.speed = 0
+	elif \"SPEED\" in self: self.SPEED = 0
+		
+	print(\"Камікадзе вибухає!\")
+	
+	var tween = create_tween()
+	tween.tween_property(self, \"modulate\", Color.RED, 0.3)
+	
+	await get_tree().create_timer(0.3).timeout
+	
+	if bomb_radius and bomb_radius.has_method(\"execute_explosion\"):
+		await bomb_radius.execute_explosion(bomb_damage, knockback_power)
+		
+	queue_free()
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wkour"]
+radius = 38.013157
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rka8t"]
+radius = 22.090721
+
 [node name="test_level" type="Node2D" unique_id=1983597014]
+position = Vector2(-19, 25)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1291275238]
 position = Vector2(259.5, 0)
@@ -68,3 +125,23 @@ length_of_view = Vector2(256, 128)
 
 [node name="trowble" parent="." unique_id=763437345 instance=ExtResource("4_ihfcg")]
 position = Vector2(344, -456)
+
+[node name="Kamikadze" type="CharacterBody2D" parent="." unique_id=88465519]
+position = Vector2(212, -277)
+collision_layer = 5
+collision_mask = 15
+script = SubResource("GDScript_rka8t")
+
+[node name="RadiusBoomBoom" type="Area2D" parent="Kamikadze" unique_id=622999734]
+position = Vector2(54, -9)
+script = ExtResource("5_rka8t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Kamikadze/RadiusBoomBoom" unique_id=1977456403]
+position = Vector2(37, -25)
+shape = SubResource("CircleShape2D_wkour")
+
+[node name="Sprite2D" type="Sprite2D" parent="Kamikadze" unique_id=131264584]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Kamikadze" unique_id=1629324918]
+position = Vector2(90, -34)
+shape = SubResource("CircleShape2D_rka8t")

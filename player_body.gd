@@ -74,8 +74,6 @@ func _ready() -> void:
 		add_child(hud_instance)
 		hud_instance.visible = true
 
-	#дані передаються через функціЇ set_назва того що передаєш()
-	#на початку обов'язково оновити всі дані
 	hud_instance.set_hp(hp)
 
 
