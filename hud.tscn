@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://y3sknp0348vl"]
 
 [ext_resource type="Script" uid="uid://dteij16uc0vqa" path="res://hud.gd" id="1_37p78"]
-[ext_resource type="PackedScene" uid="uid://b778wu5225j8r" path="res://main_menu.tscn" id="2_64ctp"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37p78"]
 bg_color = Color(0.1985591, 0.1985591, 0.1985591, 1)
@@ -14,7 +13,6 @@ layer = 10
 script = ExtResource("1_37p78")
 helth_bar = NodePath("Control/HealthBar")
 pause_menu = NodePath("Control/Menu_Pause")
-main_menu = ExtResource("2_64ctp")
 
 [node name="Control" type="Control" parent="." unique_id=1033053351]
 layout_mode = 3

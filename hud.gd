@@ -35,4 +35,5 @@ func _on_continue_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	if main_menu:
-		get_tree().change_scene_to_packed(main_menu)
+		# get_tree().change_scene_to_packed(main_menu)
+		pass

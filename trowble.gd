@@ -1,5 +1,5 @@
 class_name Trowble
-extends RigidBody2D
+extends CharacterBody2D
 
 enum Types {NORMAL, JUMPING}
 
@@ -13,8 +13,7 @@ var velosity_y: float = 0
 var is_jumping: bool = false
 var bounce_force: float = 0
 var previous_position: Vector2 = Vector2.ZERO
-var velocity: Vector2 = Vector2.ZERO
-
+var velocity_c: Vector2 = Vector2.ZERO
 
 
 
