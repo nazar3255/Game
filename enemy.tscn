@@ -10,7 +10,7 @@ size = Vector2(16, 16)
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_7k104")
-attack_type = 1
+attack_type = 2
 wall_checker = NodePath("wall_cheker")
 check_proces = NodePath("check_proces")
 can_make_turn = NodePath("can_turn")
@@ -23,6 +23,7 @@ limits_only_x = Vector2(-100, 200)
 limits_sensitivity = 70
 jump_time = 0.4
 attack_distance = 40
+expl_time = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1997042106]
 shape = SubResource("RectangleShape2D_ry2dv")

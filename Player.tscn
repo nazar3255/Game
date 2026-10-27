@@ -2,17 +2,15 @@
 
 [ext_resource type="Script" uid="uid://2adl6sweavf6" path="res://player_body.gd" id="1_xhfnw"]
 [ext_resource type="PackedScene" uid="uid://y3sknp0348vl" path="res://hud.tscn" id="2_e80uo"]
-[ext_resource type="Texture2D" uid="uid://b5lj8i3utqhy1" path="res://Player/photo_2026-10-21_00-11-40.jpg_20261021001918.png" id="2_kpjcp"]
+[ext_resource type="Texture2D" uid="uid://bsk5c2j276y70" path="res://Player/main.png" id="3_e80uo"]
 [ext_resource type="Texture2D" uid="uid://by47dndied0wb" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="3_kne1u"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kpjcp"]
-height = 80.5
+radius = 6.0
+height = 26.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exv2y"]
-size = Vector2(64, 80)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ry2dv"]
-size = Vector2(64, 32)
+size = Vector2(32, 24)
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ry2dv"]
 blend_mode = 1
@@ -30,6 +28,18 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [6]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
 }
 
 [sub_resource type="Animation" id="Animation_e80uo"]
@@ -50,10 +60,66 @@ tracks/0/keys = {
 "values": [6, 7, 8, 9, 10, 11]
 }
 
+[sub_resource type="Animation" id="Animation_tdg3f"]
+resource_name = "jump"
+length = 0.6666667
+loop_mode = 1
+step = 0.16666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [6, 7, 8, 9]
+}
+
+[sub_resource type="Animation" id="Animation_cxr5p"]
+resource_name = "run"
+loop_mode = 1
+step = 0.16666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5, 0.6666667, 0.8333334),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_dtqjt"]
+resource_name = "stand"
+length = 0.16666667
+loop_mode = 1
+step = 0.16666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_cxr5p"]
 _data = {
 &"RESET": SubResource("Animation_kne1u"),
-&"attack": SubResource("Animation_e80uo")
+&"attack": SubResource("Animation_e80uo"),
+&"jump": SubResource("Animation_tdg3f"),
+&"run": SubResource("Animation_cxr5p"),
+&"stand": SubResource("Animation_dtqjt")
 }
 
 [node name="player_body" type="CharacterBody2D" unique_id=1718144555]
@@ -62,12 +128,12 @@ script = ExtResource("1_xhfnw")
 hud = ExtResource("2_e80uo")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=40887738]
-position = Vector2(0, -40.25)
+position = Vector2(0, -13)
 shape = SubResource("CapsuleShape2D_kpjcp")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=972358351]
-offset = Vector2(0, -120)
-zoom = Vector2(2.5, 2.5)
+offset = Vector2(0, -60)
+zoom = Vector2(4, 4)
 position_smoothing_speed = 7.0
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
@@ -92,11 +158,6 @@ one_shot = true
 [node name="attack_reload" type="Timer" parent="." unique_id=1010709629]
 wait_time = 0.2
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1079698701]
-position = Vector2(2, -46)
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_kpjcp")
-
 [node name="can_move" type="Timer" parent="." unique_id=627189683]
 wait_time = 0.5
 one_shot = true
@@ -105,33 +166,30 @@ one_shot = true
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="attack_box" unique_id=464439463]
-position = Vector2(0, -40)
+position = Vector2(0, -12)
 shape = SubResource("RectangleShape2D_exv2y")
 debug_color = Color(0, 0.2666664, 1, 0.41960785)
-
-[node name="attack_box_top" type="Area2D" parent="." unique_id=423162868]
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="attack_box_top" unique_id=1585795433]
-position = Vector2(0, -96)
-shape = SubResource("RectangleShape2D_ry2dv")
-debug_color = Color(2.7915836e-05, 0.31273684, 0.8763253, 0.41960785)
 
 [node name="slise_effect" type="Sprite2D" parent="." unique_id=839735196]
 z_index = 1
 texture_filter = 2
 material = SubResource("CanvasItemMaterial_ry2dv")
-position = Vector2(2.2737368e-13, -32)
-scale = Vector2(0.1, 0.1)
+position = Vector2(0, -13)
+scale = Vector2(0.05, 0.05)
 texture = ExtResource("3_kne1u")
 hframes = 6
 vframes = 3
 frame = 6
 
-[node name="Player" type="Node2D" parent="." unique_id=1427200838]
-
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=113999188]
 libraries/ = SubResource("AnimationLibrary_cxr5p")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1402499584]
+texture_filter = 3
+position = Vector2(0, -11)
+texture = ExtResource("3_e80uo")
+hframes = 6
+vframes = 2
 
 [connection signal="timeout" from="dash" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="dash_reload" to="." method="_on_dash_reload_timeout"]

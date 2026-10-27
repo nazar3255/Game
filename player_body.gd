@@ -81,8 +81,8 @@ func _ready() -> void:
 
 	add_to_group("player")
 	$slise_effect.visible = false
-	$attack_box.position.x = 32 * direction
-	$slise_effect.position.x = 40 * direction
+	$attack_box.position.x = 16 * direction
+	$slise_effect.position.x = 20 * direction
 
 func _physics_process(delta: float) -> void:
 	if not is_cought:
@@ -92,40 +92,45 @@ func _physics_process(delta: float) -> void:
 		if get_tree().paused == false:
 			hud_instance.pause()
 
-	if Input.is_action_just_pressed("ui_cancel"):
-		var menu = get_node_or_null("CanvasLayer/Menu_Pause")
-		if menu:
-			menu.visible = !menu.visible
-			get_tree().paused = menu.visible
-
+	# if Input.is_action_just_pressed("ui_cancel"):
+	# 	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
+	# 	if menu:
+	# 		menu.visible = !menu.visible
+	# 		get_tree().paused = menu.visible
+	if velocity.x == 0:
+		$AnimationPlayer.play("stand")
 
 	if Input.is_action_pressed("left()") and can_move:
 		if not is_cought:
 			direction = -1
-			$attack_box.position.x = 32 * direction
-			$slise_effect.position.x = 40 * direction
+			$attack_box.position.x = 16 * direction
+			$slise_effect.position.x = 20 * direction
 			$slise_effect.flip_h = true
 			$Sprite2D.flip_h = true
 			if is_dash == false:
 				if velocity.x > -speed:
 					velocity.x += speed * delta * direction * axeleration
+					$AnimationPlayer.play("run")
 			else:
 				velocity.y = 0
 				velocity.x += dash_speed * delta * direction * axeleration ** 2
+				$AnimationPlayer.play("stand")
 
 	elif Input.is_action_pressed("right()") and can_move:
 		if not is_cought:
 			direction = 1
-			$attack_box.position.x = 32 * direction
-			$slise_effect.position.x = 40 * direction
+			$attack_box.position.x = 16 * direction
+			$slise_effect.position.x = 20 * direction
 			$Sprite2D.flip_h = false
 			$slise_effect.flip_h = false
 			if is_dash == false:
 				if velocity.x < speed:
 					velocity.x += speed * delta * direction * axeleration
+					$AnimationPlayer.play("run")
 			else:
 				velocity.y = 0
 				velocity.x += dash_speed * delta * direction * axeleration ** 2
+				$AnimationPlayer.play("stand")
 
 	else:
 		if is_dash == false:
@@ -189,12 +194,3 @@ func _on_attack_reload_timeout() -> void:
 func _on_can_move_timeout() -> void:
 	can_move = true
 	
-func _on_continue_button_pressed() -> void:
-	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
-	if menu:
-		menu.visible = false
-		get_tree().paused = false
-
-func _on_quit_button_pressed() -> void:
-	get_tree().paused = false
-	get_tree().change_scene_to_file("res://main_menu.tscn")

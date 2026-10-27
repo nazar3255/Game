@@ -12,7 +12,7 @@ collision_mask = 5
 script = ExtResource("1_v7oki")
 damage = 20
 time_to_fly = 1.0
-offset = 50
+offset = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1644669333]
 shape = SubResource("CircleShape2D_ry2dv")

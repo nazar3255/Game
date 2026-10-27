@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 
 enum Types_of_move {NORMAL, FLYING, STATIC}
-enum Types_of_attack {SHOT_DIRECT, SHOT_VECTOR, BITE, }
+enum Types_of_attack {SHOT_DIRECT, SHOT_VECTOR, BITE, EXPLOSION}
 enum Directions {RIGHT, LEFT}
 enum States {CALM, ATTACK}
 
@@ -37,6 +37,8 @@ var current_state: States = States.CALM
 @export var max_fall_speed: float = 800
 @export var jump_time: float = 0.5
 @export var attack_distance: int = 60
+@export var explode_distance: int = 120
+@export var expl_time: float = 3
 @export var use_gravity: bool = true
 var direction: int = 1
 @export var damage: int = 10
@@ -45,6 +47,7 @@ var can_turn: bool = true
 var target_coord: Vector2
 var can_attack: bool = true
 const g: float = 9.8
+var is_chase: float = false
 
 
 func check_limits() -> void:
@@ -85,6 +88,15 @@ func calculate_velocity(target_pos: Vector2, time) -> Vector2:
 	var vel_y = ((target_pos.y - global_position.y) - 0.5 * g * time * time) / time
 	return Vector2(vel_x, vel_y)
 
+
+func explode() -> void:
+	var player = get_tree().get_first_node_in_group("player") as Node2D
+	await get_tree().create_timer(expl_time).timeout
+	var dist = global_position.distance_to(player.global_position)
+	if dist <= explode_distance:
+		player.take_damage(damage)
+	queue_free()
+
 func shot_vector() -> void:
 	if not bullet:
 		print("Bullet scene is null!")
@@ -119,7 +131,7 @@ func bite() -> void:
 		print(velocity.y)
 		await get_tree().create_timer(jump_time).timeout
 		velocity.x = 0
-		var target = find_player.get_collider()
+		var target = get_tree().get_first_node_in_group("player") as Node2D
 		var dist
 		if target and target.has_method("is_player"):
 			target_coord = target.global_position
@@ -150,7 +162,7 @@ func bite() -> void:
 	
 func attack() -> void:
 	current_state = States.ATTACK
-	if can_attack:
+	if can_attack and attack_type != Types_of_attack.EXPLOSION:
 		can_attack = false
 		await get_tree().create_timer(0.2).timeout
 		reload_attack.start()
@@ -174,6 +186,20 @@ func take_damage(amount) -> void:
 	if hp <= 0:
 		die()
 
+func come_closer(targ) -> void:
+	var player = get_tree().get_first_node_in_group("player") as Node2D
+	current_state = States.ATTACK
+	match move_type:
+		Types_of_move.STATIC:
+			if global_position.distance_to(player.global_position) <= explode_distance:
+				explode()
+		Types_of_move.NORMAL:
+			direction = 1 if player.global_position.x > global_position.x else -1
+			is_chase = true
+			if global_position.distance_to(player.global_position) <= explode_distance:
+				is_chase = false
+				explode()
+
 func check_player() -> void:
 	player_check.start()
 	if current_state == States.CALM:
@@ -188,14 +214,19 @@ func check_player() -> void:
 			for i in range(check_eterations):
 				find_player.target_position.y += amount * top_bottom
 				if find_player.is_colliding():
-					var target = find_player.get_collider()
+					var target = get_tree().get_first_node_in_group("player") as Node2D
 					if target and target.has_method("is_player"):
 						target_coord = target.global_position
-						attack()
-						return
+						if attack_type != Types_of_attack.EXPLOSION:
+							attack()
+							return
+						else:
+							come_closer(target)
 				await get_tree().create_timer(0.1 / check_eterations).timeout
 			find_player.target_position.y = 0
 			return
+
+	
 
 func check_barriers() -> void:
 	if current_state == States.CALM:
@@ -210,7 +241,7 @@ func check_barriers() -> void:
 						change_direction()
 
 func move() -> void:
-	if current_state == States.CALM:
+	if current_state == States.CALM or is_chase:
 		match move_type:
 			Types_of_move.NORMAL:
 				velocity.x = speed * direction
