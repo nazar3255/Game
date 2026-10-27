@@ -3,13 +3,8 @@ extends Control
 @export var game_scene: PackedScene
 
 func _ready() -> void:
-	# Підключаємо кнопки головного меню кодом
-	$VBoxContainer/Play_Button.pressed.connect(_on_play_button_pressed)
-	$VBoxContainer/Settings_Button.pressed.connect(_on_settings_button_pressed)
-	$VBoxContainer/Exit_Button.pressed.connect(_on_exit_button_pressed)
+	pass
 	
-	$VBoxContainer/Play_Button.grab_focus()
-
 func _on_play_button_pressed() -> void:
 	if game_scene:
 		get_tree().change_scene_to_packed(game_scene)
