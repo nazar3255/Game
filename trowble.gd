@@ -1,5 +1,5 @@
 class_name Trowble
-extends Area2D
+extends RigidBody2D
 
 enum Types {NORMAL, JUMPING}
 
@@ -36,7 +36,6 @@ func _physics_process(delta: float) -> void:
 	if delta > 0:
 		velocity = (global_position - previous_position) / delta
 	previous_position = global_position
-	print(velocity)
 	apply_gravity(delta)
 	move(delta)
 

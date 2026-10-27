@@ -21,6 +21,7 @@ var current_state: States = States.CALM
 @export var player_check: Timer
 @export var find_player: RayCast2D
 @export var bullet: PackedScene
+@export var trowble: PackedScene
 @export var bullet_spawn: Marker2D
 
 
