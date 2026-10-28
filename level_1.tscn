@@ -62,6 +62,7 @@ scale = Vector2(0.5, 8.495)
 
 [node name="Enemy" parent="." unique_id=644901586 instance=ExtResource("3_ihfcg")]
 position = Vector2(-104, -88)
+attack_type = 3
 limits_only_x = Vector2(0, 0)
 length_of_view = Vector2(256, 128)
 

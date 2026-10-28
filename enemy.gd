@@ -42,6 +42,7 @@ var current_state: States = States.CALM
 @export var use_gravity: bool = true
 var direction: int = 1
 @export var damage: int = 10
+@export var explosion_damage: int = 200
 @export var hp: int = 10
 var can_turn: bool = true
 var target_coord: Vector2
@@ -94,7 +95,7 @@ func explode() -> void:
 	await get_tree().create_timer(expl_time).timeout
 	var dist = global_position.distance_to(player.global_position)
 	if dist <= explode_distance:
-		player.take_damage(damage)
+		player.take_damage(explosion_damage / (dist / 10))
 	queue_free()
 
 func shot_vector() -> void:
@@ -198,6 +199,7 @@ func come_closer(targ) -> void:
 			is_chase = true
 			if global_position.distance_to(player.global_position) <= explode_distance:
 				is_chase = false
+				velocity.x = 0
 				explode()
 
 func check_player() -> void:
