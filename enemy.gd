@@ -94,10 +94,19 @@ func explode() -> void:
 	var player = get_tree().get_first_node_in_group("player") as Node2D
 	await get_tree().create_timer(expl_time).timeout
 	var dist = global_position.distance_to(player.global_position)
-	if dist <= explode_distance:
-		player.take_damage(explosion_damage / (dist / 10))
-	queue_free()
-
+	for i in range(5):
+		print(i)
+		if dist <= explode_distance:
+			await get_tree().create_timer(0.2).timeout
+			dist = global_position.distance_to(player.global_position)
+			if dist <= explode_distance:
+				player.take_damage(explosion_damage / (dist / 10))
+			queue_free()
+		await get_tree().create_timer(expl_time).timeout
+	current_state = States.CALM
+	is_chase = false
+	change_direction()
+	
 func shot_vector() -> void:
 	if not bullet:
 		print("Bullet scene is null!")
@@ -197,10 +206,15 @@ func come_closer(targ) -> void:
 		Types_of_move.NORMAL:
 			direction = 1 if player.global_position.x > global_position.x else -1
 			is_chase = true
-			if global_position.distance_to(player.global_position) <= explode_distance:
+			await get_tree().create_timer(0.5).timeout
+			explode()
+			if global_position.distance_to(player.global_position) <= explode_distance / 3:
 				is_chase = false
 				velocity.x = 0
-				explode()
+			else:
+				current_state = States.CALM
+				is_chase = false
+				
 
 func check_player() -> void:
 	player_check.start()
@@ -223,7 +237,10 @@ func check_player() -> void:
 							attack()
 							return
 						else:
-							come_closer(target)
+							if move_type != Types_of_move.STATIC:
+								come_closer(target)
+							else:
+								explode()
 				await get_tree().create_timer(0.1 / check_eterations).timeout
 			find_player.target_position.y = 0
 			return
