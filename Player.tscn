@@ -122,18 +122,24 @@ _data = {
 &"stand": SubResource("Animation_dtqjt")
 }
 
-[node name="player_body" type="CharacterBody2D" unique_id=1718144555]
+[node name="player_body" type="CharacterBody2D" unique_id=1718144555 node_paths=PackedStringArray("slise_effect", "sprite", "attack_box")]
 collision_mask = 15
 script = ExtResource("1_xhfnw")
 hud = ExtResource("2_e80uo")
+slise_effect = NodePath("slise_effect")
+sprite = NodePath("Sprite2D")
+attack_box = NodePath("attack_box")
+speed = 200
+jump_hight = -70
+dash_speed = 50
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=40887738]
 position = Vector2(0, -13)
 shape = SubResource("CapsuleShape2D_kpjcp")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=972358351]
-offset = Vector2(0, -60)
-zoom = Vector2(4, 4)
+offset = Vector2(0, -40)
+zoom = Vector2(5, 5)
 position_smoothing_speed = 7.0
 drag_horizontal_enabled = true
 drag_vertical_enabled = true

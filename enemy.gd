@@ -137,7 +137,7 @@ func bite() -> void:
 	if move_type == Types_of_move.NORMAL:
 		var vel = calculate_velocity(target_coord, jump_time)
 		velocity.x += vel.x
-		velocity.y += -vel.y * 50 * jump_time
+		velocity.y += -vel.y * 40 * jump_time
 		print(velocity.y)
 		await get_tree().create_timer(jump_time).timeout
 		velocity.x = 0
@@ -230,7 +230,7 @@ func check_player() -> void:
 			for i in range(check_eterations):
 				find_player.target_position.y += amount * top_bottom
 				if find_player.is_colliding():
-					var target = get_tree().get_first_node_in_group("player") as Node2D
+					var target = find_player.get_collider()
 					if target and target.has_method("is_player"):
 						target_coord = target.global_position
 						if attack_type != Types_of_attack.EXPLOSION:

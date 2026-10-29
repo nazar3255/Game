@@ -3,6 +3,9 @@ extends CharacterBody2D
 
 @export var hud: PackedScene
 var hud_instance: CanvasLayer
+@export var slise_effect: Sprite2D
+@export var sprite: Sprite2D
+@export var attack_box: Area2D
 @export var speed: int = 250
 @export var jump_hight: int = -100
 var direction: int = 1
@@ -46,7 +49,7 @@ func attack() -> void:
 	can_attack = false
 	$AnimationPlayer.play("attack")
 	$attack_reload.start()
-	$slise_effect.visible = true
+	slise_effect.visible = true
 	var overlapping_bodies = $attack_box.get_overlapping_bodies()
 	for i in overlapping_bodies:
 		if i.has_method("take_damage"):
@@ -60,12 +63,42 @@ func take_damage(amount) -> void:
 	print(hp)
 
 func apply_gravity(delta: float) -> void:
+
 	if not is_on_floor():
 		velocity.y += base_gravity * fall_multiplier * delta
 		velocity.y = min(velocity.y, max_fall_speed)
 	else:
 		velocity.y = 0.0
 
+func change_direction(dir: int = 1) -> void:
+	direction = dir
+	if slise_effect:
+		slise_effect.position.x = 20 * dir
+		if dir == 1:
+			slise_effect.flip_h = false
+		else:
+			slise_effect.flip_h = true
+	if sprite:
+		if dir == 1:
+			sprite.flip_h = false
+		else:
+			sprite.flip_h = true
+	if attack_box:
+		attack_box.position.x = 16 * dir
+		
+func move(dir, delta) -> void:
+	if is_dash == false:
+		if velocity.x < speed and dir == 1:
+			velocity.x += speed * delta * dir * axeleration
+			$AnimationPlayer.play("run")
+		elif velocity.x > -speed and dir == -1:
+			velocity.x += speed * delta * dir * axeleration
+			$AnimationPlayer.play("run")
+	else:
+		velocity.y = 0
+		velocity.x += dash_speed * delta * dir * axeleration ** 2
+		$AnimationPlayer.play("stand")
+	
 
 func _ready() -> void:
 	hp = max_hp
@@ -92,46 +125,19 @@ func _physics_process(delta: float) -> void:
 		if get_tree().paused == false:
 			hud_instance.pause()
 
-	# if Input.is_action_just_pressed("ui_cancel"):
-	# 	var menu = get_node_or_null("CanvasLayer/Menu_Pause")
-	# 	if menu:
-	# 		menu.visible = !menu.visible
-	# 		get_tree().paused = menu.visible
 	if velocity.x == 0:
 		$AnimationPlayer.play("stand")
 
 	if Input.is_action_pressed("left()") and can_move:
 		if not is_cought:
-			direction = -1
-			$attack_box.position.x = 16 * direction
-			$slise_effect.position.x = 20 * direction
-			$slise_effect.flip_h = true
-			$Sprite2D.flip_h = true
-			if is_dash == false:
-				if velocity.x > -speed:
-					velocity.x += speed * delta * direction * axeleration
-					$AnimationPlayer.play("run")
-			else:
-				velocity.y = 0
-				velocity.x += dash_speed * delta * direction * axeleration ** 2
-				$AnimationPlayer.play("stand")
+			change_direction(-1)
+			move(direction, delta)
+			
 
 	elif Input.is_action_pressed("right()") and can_move:
 		if not is_cought:
-			direction = 1
-			$attack_box.position.x = 16 * direction
-			$slise_effect.position.x = 20 * direction
-			$Sprite2D.flip_h = false
-			$slise_effect.flip_h = false
-			if is_dash == false:
-				if velocity.x < speed:
-					velocity.x += speed * delta * direction * axeleration
-					$AnimationPlayer.play("run")
-			else:
-				velocity.y = 0
-				velocity.x += dash_speed * delta * direction * axeleration ** 2
-				$AnimationPlayer.play("stand")
-
+			change_direction(1)
+			move(direction, delta)
 	else:
 		if is_dash == false:
 			if can_move:

@@ -5,10 +5,34 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_ry2dv"]
 radius = 8.0
 
-[node name="trowble" type="CharacterBody2D" unique_id=957726364]
+[sub_resource type="CircleShape2D" id="CircleShape2D_exv2y"]
+
+[node name="trowble" type="CharacterBody2D" unique_id=957726364 node_paths=PackedStringArray("wall_checker", "timer")]
+collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_8tglj")
 type = 1
+jump_power = 1.0
+wall_checker = NodePath("RayCast2D")
+timer = NodePath("Timer")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1490515854]
 shape = SubResource("CircleShape2D_ry2dv")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=441404592]
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1960079085]
+shape = SubResource("CircleShape2D_exv2y")
+debug_color = Color(0.95, 0, 0.015833091, 0.40784314)
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=356166870]
+target_position = Vector2(16, 0)
+collision_mask = 4
+
+[node name="Timer" type="Timer" parent="." unique_id=344924572]
+wait_time = 1.5
+one_shot = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
