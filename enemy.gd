@@ -3,7 +3,7 @@ extends CharacterBody2D
 
 
 enum Types_of_move {NORMAL, FLYING, STATIC}
-enum Types_of_attack {SHOT_DIRECT, SHOT_VECTOR, BITE, EXPLOSION}
+enum Types_of_attack {SHOT_DIRECT, SHOT_VECTOR, BITE, EXPLOSION, TROW}
 enum Directions {RIGHT, LEFT}
 enum States {CALM, ATTACK}
 
@@ -89,6 +89,17 @@ func calculate_velocity(target_pos: Vector2, time) -> Vector2:
 	var vel_y = ((target_pos.y - global_position.y) - 0.5 * g * time * time) / time
 	return Vector2(vel_x, vel_y)
 
+func throw() -> void:
+	if not trowble:
+		print("Trowble scene is null!")
+		return
+	var player = get_tree().get_first_node_in_group("player") as Node2D
+	var dist_x = abs(player.global_position.x - global_position.x)
+	var forse = Vector2(dist_x, -dist_x * 2)
+	var t = trowble.instantiate()
+	get_parent().add_child(t)
+	t.setup(direction, global_position)
+	t.push(forse)
 
 func explode() -> void:
 	var player = get_tree().get_first_node_in_group("player") as Node2D
@@ -185,6 +196,8 @@ func attack() -> void:
 				shot_direct()
 			Types_of_attack.SHOT_VECTOR:
 				shot_vector()
+			Types_of_attack.TROW:
+				throw()
 
 func die() -> void:
 	print("mob die")

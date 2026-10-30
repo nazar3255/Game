@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bnp5g5cnppn6i" path="res://enemy.gd" id="1_7k104"]
 [ext_resource type="PackedScene" uid="uid://bodyjjn3pcpg5" path="res://bullet.tscn" id="2_4gyqm"]
+[ext_resource type="PackedScene" uid="uid://blrukf6sr1di8" path="res://trowble.tscn" id="3_qi2p4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ry2dv"]
 size = Vector2(16, 16)
@@ -18,6 +19,7 @@ reload_attack = NodePath("attack_reload")
 player_check = NodePath("player_check")
 find_player = NodePath("player_check_ray")
 bullet = ExtResource("2_4gyqm")
+trowble = ExtResource("3_qi2p4")
 bullet_spawn = NodePath("bullet_spawn")
 limits_only_x = Vector2(-100, 200)
 limits_sensitivity = 70

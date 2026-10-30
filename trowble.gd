@@ -9,6 +9,9 @@ enum Types {NORMAL, JUMPING}
 @export var jump_power: float = 0.5
 @export var wall_checker: RayCast2D
 @export var timer: Timer
+@export var base_gravity: float = 1000
+@export var fall_multiplier: float = 1.6
+@export var max_fall_speed: float = 800
 var direction: int = 1
 @export var damage: int = 30
 const g: float = 98
@@ -20,8 +23,9 @@ var previous: Vector2 = Vector2.ZERO
 var is_jump = false
 
 
-func setup(dir) -> void:
+func setup(dir, pos: Vector2) -> void:
 	direction = dir
+	global_position = pos
 
 func push(dir: Vector2) -> void:
 	velocity = dir
@@ -49,8 +53,11 @@ func explode(body) -> void:
 				velocity.y = velocity_y * 2
 
 func apply_gravity(delta: float) -> void:
-	velocity_y += g * delta
-	velocity.y += velocity_y
+	if not is_on_floor():
+		velocity.y += base_gravity * fall_multiplier * delta
+		velocity.y = min(velocity.y, max_fall_speed)
+	else:
+		velocity.y = 0.0
 
 func vector() -> Vector2:
 	var dir_vector = global_position - previous
