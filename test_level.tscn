@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://d2gjq062b2sag"]
+
+[ext_resource type="PackedScene" uid="uid://g55fpcra7euo" path="res://Player.tscn" id="1_1c2mv"]
+[ext_resource type="PackedScene" uid="uid://diceo1nnow5os" path="res://tiles/simple_static.tscn" id="2_f7g2b"]
+[ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="3_f7g2b"]
+
+[node name="Node2D" type="Node2D" unique_id=2086823231]
+
+[node name="player_body" parent="." unique_id=1718144555 instance=ExtResource("1_1c2mv")]
+position = Vector2(292, 101)
+
+[node name="StaticBody2D" parent="." unique_id=1998573033 instance=ExtResource("2_f7g2b")]
+position = Vector2(289, 184)
+
+[node name="Enemy" parent="." unique_id=644901586 instance=ExtResource("3_f7g2b")]
+position = Vector2(257, 110)
