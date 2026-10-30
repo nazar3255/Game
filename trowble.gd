@@ -24,6 +24,7 @@ var is_jump = false
 
 
 func setup(dir, pos: Vector2) -> void:
+	print(direction)
 	direction = dir
 	global_position = pos
 

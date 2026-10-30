@@ -3,9 +3,10 @@
 [ext_resource type="Script" uid="uid://bkp8h4iq5q0r7" path="res://trowble.gd" id="1_8tglj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ry2dv"]
-radius = 8.0
+radius = 3.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_exv2y"]
+radius = 4.0
 
 [node name="trowble" type="CharacterBody2D" unique_id=957726364 node_paths=PackedStringArray("wall_checker", "timer")]
 collision_layer = 2

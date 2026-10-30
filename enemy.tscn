@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ry2dv"]
 size = Vector2(16, 16)
 
-[node name="Enemy" type="CharacterBody2D" unique_id=644901586 node_paths=PackedStringArray("wall_checker", "check_proces", "can_make_turn", "reload_attack", "player_check", "find_player", "bullet_spawn")]
+[node name="Enemy" type="CharacterBody2D" unique_id=644901586 node_paths=PackedStringArray("wall_checker", "check_proces", "can_make_turn", "reload_attack", "player_check", "find_player", "bullet_spawn", "sprite")]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_7k104")
@@ -21,6 +21,7 @@ find_player = NodePath("player_check_ray")
 bullet = ExtResource("2_4gyqm")
 trowble = ExtResource("3_qi2p4")
 bullet_spawn = NodePath("bullet_spawn")
+sprite = NodePath("Sprite2D")
 limits_only_x = Vector2(-100, 200)
 limits_sensitivity = 70
 jump_time = 0.4
@@ -57,6 +58,8 @@ one_shot = true
 
 [node name="bullet_spawn" type="Marker2D" parent="." unique_id=276558598]
 position = Vector2(8, -8)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=373658053]
 
 [connection signal="timeout" from="can_turn" to="." method="_on_can_turn_timeout"]
 [connection signal="timeout" from="check_proces" to="." method="_on_check_proces_timeout"]

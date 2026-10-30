@@ -1,11 +1,14 @@
 extends CharacterBody2D
 
 
+enum States {NORMAL, EFFECT}
 @export var hud: PackedScene
 var hud_instance: CanvasLayer
+@export var effect_material: ShaderMaterial
 @export var slise_effect: Sprite2D
 @export var sprite: Sprite2D
 @export var attack_box: Area2D
+@export var reload_effect: Timer
 @export var speed: int = 250
 @export var jump_hight: int = -100
 var direction: int = 1
@@ -23,10 +26,27 @@ var can_attack: bool = true
 var is_cought: bool = false
 var can_move: bool = true
 var hp: int
+var can_effect: bool = true
+var current_state: States = States.NORMAL
 
 
 func is_player() -> bool:
 	return true
+
+func effect(color: Color = Color("#85aec1"), time: float = 5) -> void:
+	if can_effect:
+		effect_material.set_shader_parameter("tint_color", color)
+		var tween := create_tween()
+		tween.tween_method(
+			func(value) -> void:
+				effect_material.set_shader_parameter("intensity", value),
+			0.0,
+			1.0,
+			0.2
+		)
+		current_state = States.EFFECT
+		can_effect = false
+		reload_effect.start(time)
 
 func take_push(mob_direction, pow=1) -> void:
 	if not is_cought:
@@ -101,6 +121,8 @@ func move(dir, delta) -> void:
 	
 
 func _ready() -> void:
+	effect_material.set_shader_parameter("intensity", 0)
+
 	hp = max_hp
 	if hud:
 		hud_instance = hud.instantiate()
@@ -180,6 +202,10 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("attack()") and can_attack:
 		attack()
 
+	if Input.is_action_just_pressed("vision_effect()") and can_attack:
+		# effect(Color("#50e56b"), 0.3)
+		effect()
+
 
 func _on_dash_timeout() -> void:
 	is_dash = false
@@ -200,3 +226,16 @@ func _on_attack_reload_timeout() -> void:
 func _on_can_move_timeout() -> void:
 	can_move = true
 	
+
+
+func _on_relload_effect_timeout() -> void:
+	current_state = States.NORMAL
+	var tween = create_tween()
+	tween.tween_method(
+			func(value) -> void:
+				effect_material.set_shader_parameter("intensity", value),
+			1.0,
+			0.0,
+			0.2
+		)
+	can_effect = true

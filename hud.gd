@@ -20,7 +20,8 @@ func set_hp(hp) -> void:
 	player_hp = hp
 	helth_bar.value = hp
 
-
+func set_effect() -> void:
+	pass
 
 func _ready() -> void:
 	print("HUD успішно заспавнився і з'явився в дереві сцен! Позиція: ", $Control.global_position)

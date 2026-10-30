@@ -23,6 +23,7 @@ var current_state: States = States.CALM
 @export var bullet: PackedScene
 @export var trowble: PackedScene
 @export var bullet_spawn: Marker2D
+@export var sprite: Sprite2D
 
 
 @export var height_of_flying: int = 100
@@ -48,7 +49,7 @@ var can_turn: bool = true
 var target_coord: Vector2
 var can_attack: bool = true
 const g: float = 9.8
-var is_chase: float = false
+var is_chase: bool = false
 
 
 func check_limits() -> void:
@@ -72,7 +73,7 @@ func change_direction(dir=0) -> void:
 		direction = clamp(dir, -1, 1)
 	else:
 		direction *= -1
-		bullet_spawn.position.x = direction * 8
+	bullet_spawn.position.x = direction * 8
 	wall_checker.target_position.x = direction * 40
 	find_player.target_position.x = length_of_view.x * direction
 	can_turn = false
@@ -95,11 +96,13 @@ func throw() -> void:
 		return
 	var player = get_tree().get_first_node_in_group("player") as Node2D
 	var dist_x = abs(player.global_position.x - global_position.x)
-	var forse = Vector2(dist_x, -dist_x * 2)
+	var forse = Vector2(direction * sqrt(dist_x * g) * 9, -sqrt(dist_x * g) * 10)
 	var t = trowble.instantiate()
+	var spawn_pos = global_position + Vector2(5 * direction, 0)
 	get_parent().add_child(t)
-	t.setup(direction, global_position)
+	t.setup(direction, spawn_pos)
 	t.push(forse)
+	current_state = States.ATTACK
 
 func explode() -> void:
 	var player = get_tree().get_first_node_in_group("player") as Node2D
@@ -113,6 +116,7 @@ func explode() -> void:
 			if dist <= explode_distance:
 				player.take_damage(explosion_damage / (dist / 10))
 			queue_free()
+			return
 		await get_tree().create_timer(expl_time).timeout
 	current_state = States.CALM
 	is_chase = false
@@ -144,42 +148,45 @@ func shot_direct() -> void:
 		b.global_position = global_position
 	b.setup(direction)
 
+
+
 func bite() -> void:
+	var target = get_tree().get_first_node_in_group("player") as Node2D
+	if not is_instance_valid(target):
+		current_state = States.CALM
+		return
 	if move_type == Types_of_move.NORMAL:
-		var vel = calculate_velocity(target_coord, jump_time)
-		velocity.x += vel.x
-		velocity.y += -vel.y * 40 * jump_time
-		print(velocity.y)
+		velocity.x = 0
+		await get_tree().create_timer(jump_time).timeout
+		target_coord = target.global_position
+		var gravity = base_gravity * fall_multiplier
+		var dx = target_coord.x - global_position.x
+		var dy = target_coord.y - global_position.y
+		velocity.x = dx / jump_time
+		velocity.y = (dy - 0.5 * gravity * jump_time * jump_time) / jump_time
 		await get_tree().create_timer(jump_time).timeout
 		velocity.x = 0
-		var target = get_tree().get_first_node_in_group("player") as Node2D
-		var dist
-		if target and target.has_method("is_player"):
-			target_coord = target.global_position
-			dist = abs(global_position.x - target.global_position.x)
-		print(dist)
-		if target:
-			await get_tree().create_timer(0.2).timeout
-			if dist <= attack_distance and target.global_position.x * direction > global_position.x * direction:
+		var dist = abs(global_position.x - target.global_position.x)
+		var in_front = (target.global_position.x - global_position.x) * direction > 0
+		if dist <= attack_distance and in_front:
+			if target.has_method("take_damage"):
 				target.take_damage(damage)
-	if move_type == Types_of_move.FLYING:
+	elif move_type == Types_of_move.FLYING:
+		target_coord = target.global_position
 		var dir_to_player = global_position.direction_to(target_coord)
 		dir_to_player.x += 0.5 * direction
 		dir_to_player = dir_to_player.normalized()
 		velocity = dir_to_player * (speed * 3)
 		await get_tree().create_timer(0.5).timeout
-		var player = get_tree().get_first_node_in_group("player") as Node2D
-		if player:
-			var dist_x = abs(global_position.x - player.global_position.x)
-			print("Відстань по X: ", dist_x)
-			if dist_x <= attack_distance:
-				if player.has_method("take_damage"):
-					player.take_damage(damage)
+		if is_instance_valid(target):
+			var dist = global_position.distance_to(target.global_position)
+			if dist <= attack_distance:
+				if target.has_method("take_damage"):
+					target.take_damage(damage)
 		velocity = Vector2(direction * speed, -speed * 2)
 		await get_tree().create_timer(0.2).timeout
 		velocity = Vector2.ZERO
 		current_state = States.CALM
-		
 	
 func attack() -> void:
 	current_state = States.ATTACK

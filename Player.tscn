@@ -4,6 +4,34 @@
 [ext_resource type="PackedScene" uid="uid://y3sknp0348vl" path="res://hud.tscn" id="2_e80uo"]
 [ext_resource type="Texture2D" uid="uid://bsk5c2j276y70" path="res://Player/main.png" id="3_e80uo"]
 [ext_resource type="Texture2D" uid="uid://by47dndied0wb" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="3_kne1u"]
+[ext_resource type="Shader" uid="uid://bhd8evthwuu31" path="res://Player.gdshader" id="5_cxr5p"]
+[ext_resource type="Shader" uid="uid://cfjpdxtal0dvt" path="res://global.gdshader" id="6_tdg3f"]
+[ext_resource type="Script" uid="uid://bfby53tcqflsj" path="res://color_rect_2.gd" id="7_dtqjt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cxr5p"]
+shader = ExtResource("5_cxr5p")
+shader_parameter/intensity = 0.0
+shader_parameter/tint_color = Color(0.32400003, 0.47160003, 0.54, 1)
+shader_parameter/saturation = 0.0
+shader_parameter/contrast = 1.1870000563825
+shader_parameter/brightness = 0.7710000366225
+shader_parameter/distortion = 0.07600000361
+shader_parameter/chromatic = 0.0010000000475
+shader_parameter/bloom_strength = 0.6690000317775
+shader_parameter/bloom_threshold = 1.602000076095
+shader_parameter/bloom_radius = 11.7070005085825
+shader_parameter/blur_strength = 0.4150000197125
+shader_parameter/blur_radius = 7.53200031027
+shader_parameter/bokeh_strength = 0.64800003078
+shader_parameter/bokeh_threshold = 0.72800003458
+shader_parameter/bokeh_radius = 5.98000023655
+shader_parameter/bokeh_color = Color(1, 1, 1, 1)
+shader_parameter/bokeh_highlights = 2.0
+shader_parameter/bokeh_shadows = 0.0
+shader_parameter/vignette_strength = 1.0
+shader_parameter/grain_strength = 0.098000004655
+shader_parameter/scanline_strength = 0.0830000039425
+shader_parameter/flicker_strength = 0.30800001463
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kpjcp"]
 radius = 6.0
@@ -122,13 +150,38 @@ _data = {
 &"stand": SubResource("Animation_dtqjt")
 }
 
-[node name="player_body" type="CharacterBody2D" unique_id=1718144555 node_paths=PackedStringArray("slise_effect", "sprite", "attack_box")]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gkcsb"]
+shader = ExtResource("6_tdg3f")
+shader_parameter/saturation = 1.0
+shader_parameter/contrast = 1.12
+shader_parameter/brightness = 0.9850000230375
+shader_parameter/shadow_color = Color(0.6532, 0.65698665, 0.71, 1)
+shader_parameter/highlight_color = Color(0.6872, 0.656, 0.8, 1)
+shader_parameter/fog_strength = 0.0150000007125
+shader_parameter/fog_scale = 3.766000155135
+shader_parameter/fog_speed = 0.014000000665
+shader_parameter/fog_motion_strength = 2.1050000999875
+shader_parameter/fog_detail = 0.0
+shader_parameter/fog_softness = 2.0
+shader_parameter/fog_world_scale = 0.0010000000475
+shader_parameter/fog_color = Color(1, 0.06666666, 0, 1)
+shader_parameter/camera_world_position = Vector2(0, 0)
+shader_parameter/vignette_strength = 0.3050000144875
+shader_parameter/vignette_radius = 0.97500004305262
+shader_parameter/vignette_center = Vector2(0.5, 0.5)
+shader_parameter/grain_strength = 0.0
+shader_parameter/flicker_strength = 0.0
+shader_parameter/color_shift = 0.0
+
+[node name="player_body" type="CharacterBody2D" unique_id=1718144555 node_paths=PackedStringArray("slise_effect", "sprite", "attack_box", "reload_effect")]
 collision_mask = 15
 script = ExtResource("1_xhfnw")
 hud = ExtResource("2_e80uo")
+effect_material = SubResource("ShaderMaterial_cxr5p")
 slise_effect = NodePath("slise_effect")
 sprite = NodePath("Sprite2D")
 attack_box = NodePath("attack_box")
+reload_effect = NodePath("relload_effect")
 speed = 200
 jump_hight = -70
 dash_speed = 50
@@ -168,6 +221,10 @@ wait_time = 0.2
 wait_time = 0.5
 one_shot = true
 
+[node name="relload_effect" type="Timer" parent="." unique_id=365864828]
+wait_time = 5.0
+one_shot = true
+
 [node name="attack_box" type="Area2D" parent="." unique_id=46567397]
 collision_mask = 2
 
@@ -197,8 +254,25 @@ texture = ExtResource("3_e80uo")
 hframes = 6
 vframes = 2
 
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=186230577]
+
+[node name="ColorRect2" type="ColorRect" parent="CanvasLayer" unique_id=1681833008 node_paths=PackedStringArray("fog_camera")]
+visible = false
+material = SubResource("ShaderMaterial_gkcsb")
+offset_right = 1440.0
+offset_bottom = 720.0
+script = ExtResource("7_dtqjt")
+fog_camera = NodePath("../../Camera2D")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer" unique_id=1022689418]
+material = SubResource("ShaderMaterial_cxr5p")
+offset_right = 1440.0
+offset_bottom = 720.0
+color = Color(0.78, 0.78, 0.78, 1)
+
 [connection signal="timeout" from="dash" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="dash_reload" to="." method="_on_dash_reload_timeout"]
 [connection signal="timeout" from="jump_in_air" to="." method="_on_jump_in_air_timeout"]
 [connection signal="timeout" from="attack_reload" to="." method="_on_attack_reload_timeout"]
 [connection signal="timeout" from="can_move" to="." method="_on_can_move_timeout"]
+[connection signal="timeout" from="relload_effect" to="." method="_on_relload_effect_timeout"]
