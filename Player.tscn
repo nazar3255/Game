@@ -2,10 +2,16 @@
 
 [ext_resource type="Script" uid="uid://2adl6sweavf6" path="res://player_body.gd" id="1_xhfnw"]
 [ext_resource type="PackedScene" uid="uid://y3sknp0348vl" path="res://hud.tscn" id="2_e80uo"]
+[ext_resource type="AudioStream" uid="uid://dbomsosol171j" path="res://Player/Happy music.mp3" id="3_5ncpa"]
 [ext_resource type="Texture2D" uid="uid://by47dndied0wb" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="3_kne1u"]
+[ext_resource type="AudioStream" uid="uid://crv0u50rmhj1v" path="res://Player/dheerajakam4jor-swoosh-sound-effect-for-fight-scenes-or-transitions-3-149888.mp3" id="3_l6ohk"]
+[ext_resource type="AudioStream" uid="uid://bicjiiponcrm8" path="res://Player/Dark Ambience.mp3" id="3_wi0c6"]
 [ext_resource type="Shader" uid="uid://b4if2lxfonwo4" path="res://glow_ghost.gdshader" id="4_5ncpa"]
+[ext_resource type="AudioStream" uid="uid://crkm45hgpc1jn" path="res://Player/soundreality-whoosh-sizzling-390708.mp3" id="4_oudfo"]
+[ext_resource type="AudioStream" uid="uid://cdn07nwsjdtk3" path="res://Player/Magic.mp3" id="5_3tkgg"]
 [ext_resource type="Shader" uid="uid://bhd8evthwuu31" path="res://Player.gdshader" id="5_cxr5p"]
 [ext_resource type="Texture2D" uid="uid://cohuwdli8cuno" path="res://Player/Player_texture.png" id="6_5ncpa"]
+[ext_resource type="AudioStream" uid="uid://bfjwxaq46xjyq" path="res://Player/Magic 2.mp3" id="6_l6ohk"]
 [ext_resource type="Shader" uid="uid://cfjpdxtal0dvt" path="res://global.gdshader" id="6_tdg3f"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cxr5p"]
@@ -263,10 +269,22 @@ shader_parameter/grain_strength = 0.0
 shader_parameter/flicker_strength = 0.0
 shader_parameter/color_shift = 0.0
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_w5icm"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ft4y4"]
+random_pitch = 1.5747979
+random_volume_offset_db = 4.44
+
 [node name="player_body" type="CharacterBody2D" unique_id=1718144555 node_paths=PackedStringArray("effect_shader", "global_shader", "light", "slise_effect", "sprite", "attack_box", "reload_effect")]
 collision_mask = 15
 script = ExtResource("1_xhfnw")
 hud = ExtResource("2_e80uo")
+attack_sound = ExtResource("3_l6ohk")
+dash_sound = ExtResource("4_oudfo")
+musik = ExtResource("3_wi0c6")
+happy_musik = ExtResource("3_5ncpa")
+happy_sound = ExtResource("5_3tkgg")
+magik_sound = ExtResource("6_l6ohk")
 effect_material = SubResource("ShaderMaterial_cxr5p")
 effect_shader = NodePath("CanvasLayer/ColorRect")
 gloving = SubResource("ShaderMaterial_5hph3")
@@ -388,6 +406,13 @@ color = Color(0.78, 0.78, 0.78, 1)
 [node name="super" type="Timer" parent="." unique_id=723501998]
 wait_time = 15.0
 one_shot = true
+
+[node name="musik" type="AudioStreamPlayer2D" parent="." unique_id=1922543338]
+stream = SubResource("AudioStreamRandomizer_w5icm")
+volume_db = -5.6
+
+[node name="sound" type="AudioStreamPlayer2D" parent="." unique_id=694963571]
+stream = SubResource("AudioStreamRandomizer_ft4y4")
 
 [connection signal="timeout" from="dash" to="." method="_on_dash_timeout"]
 [connection signal="timeout" from="dash_reload" to="." method="_on_dash_reload_timeout"]
