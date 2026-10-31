@@ -175,7 +175,7 @@ shader_parameter/brightness = 1.0450000258875
 shader_parameter/shadow_color = Color(0.6532, 0.65698665, 0.71, 1)
 shader_parameter/highlight_color = Color(0.6872, 0.656, 0.8, 1)
 shader_parameter/psychedelic_enabled = true
-shader_parameter/psychedelic_intensity = 0.0
+shader_parameter/psychedelic_intensity = 1.0
 shader_parameter/wave_strength = 0.018
 shader_parameter/wave_frequency = 12.0
 shader_parameter/wave_speed = 1.2
@@ -313,3 +313,4 @@ color = Color(0.78, 0.78, 0.78, 1)
 [connection signal="timeout" from="attack_reload" to="." method="_on_attack_reload_timeout"]
 [connection signal="timeout" from="can_move" to="." method="_on_can_move_timeout"]
 [connection signal="timeout" from="relload_effect" to="." method="_on_relload_effect_timeout"]
+[connection signal="area_entered" from="attack_box" to="." method="_on_attack_box_area_entered"]

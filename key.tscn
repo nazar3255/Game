@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bicld1emyluwa"]
+
+[ext_resource type="Texture2D" uid="uid://ddo2dnpb4d641" path="res://tiles/Key.png" id="1_up4cr"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p0yg6"]
+atlas = ExtResource("1_up4cr")
+region = Rect2(0, 0, 12, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_krfvd"]
+atlas = ExtResource("1_up4cr")
+region = Rect2(12, 0, 12, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d8y70"]
+atlas = ExtResource("1_up4cr")
+region = Rect2(24, 0, 12, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k4l57"]
+atlas = ExtResource("1_up4cr")
+region = Rect2(36, 0, 12, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yf5fn"]
+animations = [{
+"frames": [],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p0yg6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_krfvd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d8y70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k4l57")
+}],
+"loop": 1,
+"name": &"key",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
+size = Vector2(12, 10)
+
+[node name="Area2D" type="Area2D" unique_id=1232771919]
+light_mask = 31
+visibility_layer = 31
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1280014618]
+light_mask = 1023
+visibility_layer = 1023
+texture_filter = 3
+sprite_frames = SubResource("SpriteFrames_yf5fn")
+animation = &"key"
+autoplay = "key"
+frame_progress = 0.52614826
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=606962304]
+light_mask = 31
+visibility_layer = 31
+shape = SubResource("RectangleShape2D_g4v7s")

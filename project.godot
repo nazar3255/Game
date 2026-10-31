@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="HacatonGameProject"
-run/main_scene="uid://dxt30bo0qefd1"
+run/main_scene="uid://ditkwov0pkmq0"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
 
