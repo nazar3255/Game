@@ -7,10 +7,50 @@
 [ext_resource type="Texture2D" uid="uid://c1ymbt0esbndw" path="res://tiles/exit_butt.png" id="4_gnsb0"]
 [ext_resource type="Texture2D" uid="uid://dc0jk3xwsw5lj" path="res://tiles/exit_butt_hover.png" id="5_ibaye"]
 [ext_resource type="Texture2D" uid="uid://fkxwvv6kdv15" path="res://tiles/particle.png" id="6_gnsb0"]
+[ext_resource type="Texture2D" uid="uid://bwub5adc1uh05" path="res://tiles/title_img.png" id="7_y4h4p"]
+[ext_resource type="Texture2D" uid="uid://dtw0yt5eowshh" path="res://tiles/warning img.png" id="9_hew1e"]
 
 [sub_resource type="Curve" id="Curve_g4v7s"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.462766, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
+
+[sub_resource type="Animation" id="Animation_iel11"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/WarningImg:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_lx628"]
+resource_name = "warning"
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimationPlayer/WarningImg:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.53333336, 1, 1.4666667, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.34906584, 0.0, -0.34906584, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_vc13i"]
+_data = {
+&"RESET": SubResource("Animation_iel11"),
+&"warning": SubResource("Animation_lx628")
+}
 
 [node name="Menu" type="Control" unique_id=547570597]
 layout_mode = 3
@@ -58,6 +98,11 @@ texture_hover = ExtResource("5_ibaye")
 ignore_texture_size = true
 stretch_mode = 0
 
+[node name="TitleImg" type="Sprite2D" parent="." unique_id=1921895533]
+position = Vector2(1202.0001, 162.00002)
+scale = Vector2(0.18295786, 0.2073568)
+texture = ExtResource("7_y4h4p")
+
 [node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=2053522513]
 modulate = Color(1, 1, 1, 0.47058824)
 position = Vector2(731, 318)
@@ -73,6 +118,15 @@ scale_amount_min = 0.15
 scale_amount_max = 0.15
 scale_amount_curve = SubResource("Curve_g4v7s")
 color = Color(0.24705882, 1, 1, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=250276121]
+libraries/ = SubResource("AnimationLibrary_vc13i")
+autoplay = &"warning"
+
+[node name="WarningImg" type="Sprite2D" parent="AnimationPlayer" unique_id=603629655]
+position = Vector2(1201, 353)
+scale = Vector2(0.14371362, 0.14908855)
+texture = ExtResource("9_hew1e")
 
 [connection signal="pressed" from="Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Exit" to="." method="_on_exit_pressed"]
