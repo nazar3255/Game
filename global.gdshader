@@ -1,4 +1,3 @@
-
 shader_type canvas_item;
 
 uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;
@@ -16,24 +15,38 @@ uniform vec4 highlight_color : source_color = vec4(0.85, 0.79, 0.63, 1.0);
 
 
 // ==========================================
-// PROCEDURAL FOG
+// PSYCHEDELIC EFFECTS
 // ==========================================
 
-uniform float fog_strength : hint_range(0.0, 0.3) = 0.065;
-uniform float fog_scale : hint_range(0.5, 10.0) = 2.2;
-uniform float fog_speed : hint_range(0.0, 0.5) = 0.018;
+// Головний перемикач
+uniform bool psychedelic_enabled = false;
 
-// НОВИЙ ПАРАМЕТР — СИЛА РУХУ ТУМАНУ
-uniform float fog_motion_strength : hint_range(0.0, 3.0) = 1.0;
+// Загальна сила ефекту
+uniform float psychedelic_intensity : hint_range(0.0, 1.0) = 1.0;
 
-uniform float fog_detail : hint_range(0.0, 1.0) = 0.35;
-uniform float fog_softness : hint_range(0.1, 2.0) = 1.2;
+// Хвиляста дисторсія
+uniform float wave_strength : hint_range(0.0, 0.08) = 0.018;
+uniform float wave_frequency : hint_range(1.0, 30.0) = 12.0;
+uniform float wave_speed : hint_range(0.0, 5.0) = 1.2;
 
-uniform float fog_world_scale : hint_range(0.0, 0.02) = 0.0035;
+// Додаткове органічне викривлення
+uniform float organic_distortion : hint_range(0.0, 0.05) = 0.012;
+uniform float distortion_scale : hint_range(1.0, 15.0) = 4.0;
 
-uniform vec4 fog_color : source_color = vec4(0.35, 0.42, 0.34, 1.0);
+// Скручування зображення
+uniform float swirl_strength : hint_range(0.0, 3.0) = 0.45;
 
-uniform vec2 camera_world_position = vec2(0.0);
+// Колірна дисперсія
+uniform float dispersion_strength : hint_range(0.0, 0.03) = 0.006;
+
+// Насиченість психоделічного режиму
+uniform float psychedelic_saturation : hint_range(0.0, 2.0) = 1.45;
+
+// Інтенсивність кольорових переливів
+uniform float psychedelic_colors : hint_range(0.0, 1.0) = 0.25;
+
+// Швидкість зміни кольорів
+uniform float color_cycle_speed : hint_range(0.0, 3.0) = 0.35;
 
 
 // ==========================================
@@ -145,58 +158,86 @@ float fbm(vec2 p) {
 
 
 // ==========================================
-// DOMAIN WARPING
+// PSYCHEDELIC DISTORTION
 // ==========================================
 
-float calculate_fog(vec2 uv) {
+vec2 calculate_psychedelic_uv(vec2 uv) {
 
     vec2 screen_size = vec2(textureSize(screen_texture, 0));
     float aspect = screen_size.x / screen_size.y;
 
-    vec2 p = uv * vec2(aspect, 1.0) * fog_scale;
+    vec2 centered = uv - vec2(0.5);
 
-    // Прив'язка до координат світу
-    p += camera_world_position * fog_world_scale;
+    // Корекція пропорцій екрана
+    centered.x *= aspect;
 
-    // Рух туману з урахуванням нового параметра
-    vec2 movement = vec2(
-        TIME * fog_speed * fog_motion_strength,
-        TIME * fog_speed * 0.35 * fog_motion_strength
+    float radius = length(centered);
+    float angle = atan(centered.y, centered.x);
+
+    // Хвилі, що проходять через зображення
+    float wave = sin(
+        radius * wave_frequency -
+        TIME * wave_speed +
+        sin(angle * 3.0 + TIME * 0.5)
     );
 
-    // Викривлення форми
-    float warp_x = fbm(p * 0.65 + movement);
-
-    float warp_y = fbm(
-        p * 0.65 + movement + vec2(12.4, 5.7)
+    float secondary_wave = sin(
+        angle * 5.0 -
+        radius * 8.0 +
+        TIME * wave_speed * 0.7
     );
 
-    vec2 warped_p = p + (vec2(warp_x, warp_y) - 0.5) * 1.8;
+    // Органічне викривлення за допомогою шуму
+    vec2 noise_position = uv * distortion_scale;
 
-    // Великі форми
-    float large_noise = fbm(warped_p * 0.7);
-
-    // Дрібні деталі
-    float detail_noise = fbm(
-        warped_p * 1.8 + vec2(4.2, 8.1)
+    noise_position += vec2(
+        TIME * 0.12,
+        TIME * 0.08
     );
 
-    // Поєднання шумів
-    float noise_value = mix(
-        large_noise,
-        detail_noise,
-        fog_detail
+    float noise_x = fbm(noise_position);
+    float noise_y = fbm(
+        noise_position + vec2(7.3, 3.8)
     );
 
-    float density = clamp(
-        (noise_value - 0.12) * 1.25,
-        0.0,
-        1.0
+    vec2 organic_offset = vec2(
+        noise_x - 0.5,
+        noise_y - 0.5
     );
 
-    density = pow(density, fog_softness);
+    // Основний рух хвиль
+    vec2 wave_offset = normalize(centered + vec2(0.0001)) *
+        wave * wave_strength;
 
-    return density;
+    // Додаткові хвилясті коливання
+    wave_offset += vec2(
+        secondary_wave,
+        wave
+    ) * wave_strength * 0.35;
+
+    // Органічне викривлення
+    vec2 final_offset = wave_offset +
+        organic_offset * organic_distortion;
+
+    // Скручування зображення
+    float swirl = sin(
+        radius * 5.0 - TIME * wave_speed * 0.5
+    ) * swirl_strength * radius;
+
+    float rotation_angle = swirl * 0.35;
+
+    mat2 rotation = mat2(
+        vec2(cos(rotation_angle), -sin(rotation_angle)),
+        vec2(sin(rotation_angle), cos(rotation_angle))
+    );
+
+    centered = rotation * centered;
+
+    vec2 distorted_uv = centered / vec2(aspect, 1.0) + vec2(0.5);
+
+    distorted_uv += final_offset / vec2(aspect, 1.0);
+
+    return distorted_uv;
 }
 
 
@@ -208,17 +249,101 @@ void fragment() {
 
     vec2 uv = SCREEN_UV;
 
-    vec2 screen_size = vec2(textureSize(screen_texture, 0));
-    float aspect = screen_size.x / screen_size.y;
+    float intensity = 0.0;
 
-    vec3 color = texture(screen_texture, uv).rgb;
+    if (psychedelic_enabled) {
+        intensity = psychedelic_intensity;
+    }
+
+    // ======================================
+    // PSYCHEDELIC UV
+    // ======================================
+
+    vec2 distorted_uv = uv;
+
+    if (intensity > 0.0) {
+
+        vec2 psychedelic_uv = calculate_psychedelic_uv(uv);
+
+        distorted_uv = mix(
+            uv,
+            psychedelic_uv,
+            intensity
+        );
+    }
+
+    // Захист від виходу за межі текстури
+    distorted_uv = clamp(
+        distorted_uv,
+        vec2(0.001),
+        vec2(0.999)
+    );
 
 
+    // ======================================
+    // CHROMATIC DISPERSION
+    // ======================================
+
+    vec3 color;
+
+    if (intensity > 0.0) {
+
+        vec2 center = uv - vec2(0.5);
+
+        float aspect = float(textureSize(screen_texture, 0).x) /
+                       float(textureSize(screen_texture, 0).y);
+
+        center.x *= aspect;
+
+        vec2 dispersion_direction = normalize(
+            center + vec2(0.0001)
+        );
+
+        dispersion_direction.x /= aspect;
+
+        float dispersion = dispersion_strength * intensity;
+
+        vec2 offset = dispersion_direction * dispersion;
+
+        // Червоний канал
+        float red = texture(
+            screen_texture,
+            clamp(distorted_uv + offset, vec2(0.001), vec2(0.999))
+        ).r;
+
+        // Зелений канал
+        float green = texture(
+            screen_texture,
+            distorted_uv
+        ).g;
+
+        // Синій канал
+        float blue = texture(
+            screen_texture,
+            clamp(distorted_uv - offset, vec2(0.001), vec2(0.999))
+        ).b;
+
+        color = vec3(red, green, blue);
+
+    } else {
+
+        color = texture(screen_texture, uv).rgb;
+    }
+
+
+    // ======================================
     // COLOR GRADING
+    // ======================================
 
     float gray = dot(color, vec3(0.299, 0.587, 0.114));
 
-    color = mix(vec3(gray), color, saturation);
+    float current_saturation = mix(
+        saturation,
+        psychedelic_saturation,
+        intensity
+    );
+
+    color = mix(vec3(gray), color, current_saturation);
 
     float lum = dot(color, vec3(0.299, 0.587, 0.114));
 
@@ -232,24 +357,45 @@ void fragment() {
     color *= brightness;
 
 
+    // ======================================
     // COLOR SHIFT
+    // ======================================
 
     color.g += color_shift * (1.0 - lum);
     color.b -= color_shift * 0.4 * (1.0 - lum);
 
 
-    // PROCEDURAL FOG
+    // ======================================
+    // PSYCHEDELIC COLOR CYCLE
+    // ======================================
 
-    float fog = calculate_fog(uv);
+    if (intensity > 0.0) {
 
-    color = mix(
-        color,
-        fog_color.rgb,
-        fog * fog_strength
-    );
+        float color_time = TIME * color_cycle_speed;
+
+        vec3 psychedelic_tint = vec3(
+            0.5 + 0.5 * sin(color_time + uv.x * 4.0),
+            0.5 + 0.5 * sin(color_time + uv.y * 4.0 + 2.1),
+            0.5 + 0.5 * sin(color_time + (uv.x + uv.y) * 3.0 + 4.2)
+        );
+
+        vec3 tinted_color = color *
+            (0.65 + psychedelic_tint * 0.7);
+
+        color = mix(
+            color,
+            tinted_color,
+            psychedelic_colors * intensity
+        );
+    }
 
 
+    // ======================================
     // VIGNETTE
+    // ======================================
+
+    vec2 screen_size = vec2(textureSize(screen_texture, 0));
+    float aspect = screen_size.x / screen_size.y;
 
     vec2 vignette_uv = uv - vignette_center;
 
@@ -266,7 +412,9 @@ void fragment() {
     color *= 1.0 - vignette * vignette_strength;
 
 
+    // ======================================
     // FILM GRAIN
+    // ======================================
 
     float grain = hash(
         floor(uv * vec2(900.0, 900.0)) +
@@ -276,7 +424,9 @@ void fragment() {
     color += (grain - 0.5) * grain_strength;
 
 
+    // ======================================
     // FLICKER
+    // ======================================
 
     float flicker = hash(
         vec2(floor(TIME * 8.0), 1.0)
@@ -285,7 +435,9 @@ void fragment() {
     color *= 1.0 - flicker * flicker_strength;
 
 
+    // ======================================
     // FINAL COLOR
+    // ======================================
 
     COLOR = vec4(color, 1.0);
 }

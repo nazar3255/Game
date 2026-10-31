@@ -14,6 +14,18 @@ enum States {CALM, ATTACK}
 var current_state: States = States.CALM
 
 
+enum BitePhase {NONE, WINDUP, DASH, RETREAT}
+var bite_phase: BitePhase = BitePhase.NONE
+var bite_time_left: float = 0.0
+var bite_dir: Vector2 = Vector2.ZERO
+var bite_hit_done: bool = false
+
+@export var bite_windup: float = 0.3
+@export var bite_dash_time: float = 0.5
+@export var bite_retreat_time: float = 0.35
+@export var bite_hit_radius: float = 32.0
+
+
 @export var wall_checker: RayCast2D
 @export var check_proces: Timer
 @export var can_make_turn: Timer
@@ -148,7 +160,57 @@ func shot_direct() -> void:
 		b.global_position = global_position
 	b.setup(direction)
 
+func start_flying_bite() -> void:
+	current_state = States.ATTACK
+	bite_phase = BitePhase.WINDUP
+	bite_time_left = bite_windup
+	bite_hit_done = false
+	velocity = Vector2.ZERO
 
+func end_flying_bite() -> void:
+	bite_phase = BitePhase.NONE
+	velocity = Vector2.ZERO
+	current_state = States.CALM
+
+func start_retreat() -> void:
+	bite_phase = BitePhase.RETREAT
+	bite_time_left = bite_retreat_time
+	# відлітаємо від гравця й трохи вгору
+	var away_x = -sign(bite_dir.x) if bite_dir.x != 0 else -direction
+	velocity = Vector2(away_x, -1).normalized() * speed * 2
+
+func update_flying_bite(delta: float) -> void:
+	var target = get_tree().get_first_node_in_group("player") as Node2D
+	bite_time_left -= delta
+
+	match bite_phase:
+		BitePhase.WINDUP:
+			velocity = Vector2.ZERO
+			if bite_time_left <= 0.0:
+				if not is_instance_valid(target):
+					end_flying_bite()
+					return
+				# ціляться в гравця в момент початку ривка
+				bite_dir = global_position.direction_to(target.global_position)
+				velocity = bite_dir * speed * 3
+				bite_phase = BitePhase.DASH
+				bite_time_left = bite_dash_time
+
+		BitePhase.DASH:
+			if not bite_hit_done and is_instance_valid(target):
+				if global_position.distance_to(target.global_position) <= bite_hit_radius:
+					bite_hit_done = true
+					if target.has_method("take_damage"):
+						target.take_damage(damage)
+					start_retreat()
+					return
+			# промазав / вперся в стіну чи підлогу
+			if bite_time_left <= 0.0 or is_on_wall() or is_on_floor():
+				start_retreat()
+
+		BitePhase.RETREAT:
+			if bite_time_left <= 0.0:
+				end_flying_bite()
 
 func bite() -> void:
 	var target = get_tree().get_first_node_in_group("player") as Node2D
@@ -172,21 +234,7 @@ func bite() -> void:
 			if target.has_method("take_damage"):
 				target.take_damage(damage)
 	elif move_type == Types_of_move.FLYING:
-		target_coord = target.global_position
-		var dir_to_player = global_position.direction_to(target_coord)
-		dir_to_player.x += 0.5 * direction
-		dir_to_player = dir_to_player.normalized()
-		velocity = dir_to_player * (speed * 3)
-		await get_tree().create_timer(0.5).timeout
-		if is_instance_valid(target):
-			var dist = global_position.distance_to(target.global_position)
-			if dist <= attack_distance:
-				if target.has_method("take_damage"):
-					target.take_damage(damage)
-		velocity = Vector2(direction * speed, -speed * 2)
-		await get_tree().create_timer(0.2).timeout
-		velocity = Vector2.ZERO
-		current_state = States.CALM
+		start_flying_bite()
 	
 func attack() -> void:
 	current_state = States.ATTACK
@@ -327,7 +375,10 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if move_type != Types_of_move.FLYING and use_gravity:
 		apply_gravity(delta)
-	move()
+	if bite_phase != BitePhase.NONE:
+		update_flying_bite(delta)
+	else:
+		move()
 	move_and_slide()
 
 
@@ -346,6 +397,8 @@ func _on_attack_reload_timeout() -> void:
 
 
 func _on_player_check_timeout() -> void:
+	if bite_phase != BitePhase.NONE:
+		return
 	if find_player.is_colliding():
 		var target = find_player.get_collider()
 		if target and not target.has_method("is_player"):

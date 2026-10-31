@@ -5,6 +5,10 @@ enum States {NORMAL, EFFECT}
 @export var hud: PackedScene
 var hud_instance: CanvasLayer
 @export var effect_material: ShaderMaterial
+@export var effect_shader: ColorRect
+@export var gloving: ShaderMaterial
+@export var global_shder: ColorRect
+@export var light: PointLight2D
 @export var slise_effect: Sprite2D
 @export var sprite: Sprite2D
 @export var attack_box: Area2D
@@ -33,13 +37,16 @@ var current_state: States = States.NORMAL
 func is_player() -> bool:
 	return true
 
-func effect(color: Color = Color("#85aec1"), time: float = 5) -> void:
+func effect(color: Color = Color("#85aec1"), time: float = 7) -> void:
 	if can_effect:
+		effect_shader.show()
 		effect_material.set_shader_parameter("tint_color", color)
 		var tween := create_tween()
 		tween.tween_method(
 			func(value) -> void:
-				effect_material.set_shader_parameter("intensity", value),
+				effect_material.set_shader_parameter("intensity", value)
+				gloving.set_shader_parameter("emission", value * 2)
+				light.energy = value,
 			0.0,
 			1.0,
 			0.2
@@ -67,7 +74,7 @@ func take_boost() -> void:
 		
 func attack() -> void:
 	can_attack = false
-	$AnimationPlayer.play("attack")
+	$AnimationPlayer2.play("attack")
 	$attack_reload.start()
 	slise_effect.visible = true
 	var overlapping_bodies = $attack_box.get_overlapping_bodies()
@@ -121,6 +128,8 @@ func move(dir, delta) -> void:
 	
 
 func _ready() -> void:
+	effect_shader.hide()
+	global_shder.show()
 	effect_material.set_shader_parameter("intensity", 0)
 
 	hp = max_hp
@@ -172,7 +181,12 @@ func _physics_process(delta: float) -> void:
 			velocity.y = 0
 			velocity.x += dash_speed * delta * direction * axeleration ** 2
 		
-
+	if is_cought:
+		$AnimationPlayer.play("climb")
+		if direction == 1:
+			sprite.flip_h = true
+		else:
+			sprite.flip_h = false
 	if not is_on_floor():
 		if $jump_in_air.is_stopped():
 			$jump_in_air.start()
@@ -181,6 +195,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("dash()") and not is_cought and can_move:
 		if can_dash == true:
+			$AnimationPlayer.play("run")
 			is_dash = true
 			$dash.start()
 			can_dash = false
@@ -211,6 +226,8 @@ func _on_dash_timeout() -> void:
 	is_dash = false
 	velocity.x = speed * direction
 	$dash_reload.start()
+	if Input.is_action_pressed("left()") and can_move or Input.is_action_pressed("right()") and can_move:
+		$AnimationPlayer.play("run")
 
 func _on_dash_reload_timeout() -> void:
 	can_dash = true
@@ -233,9 +250,13 @@ func _on_relload_effect_timeout() -> void:
 	var tween = create_tween()
 	tween.tween_method(
 			func(value) -> void:
-				effect_material.set_shader_parameter("intensity", value),
+				effect_material.set_shader_parameter("intensity", value)
+				gloving.set_shader_parameter("emission", clamp(value * 2, 1, 10))
+				light.energy = value,
 			1.0,
 			0.0,
-			0.2
+			0.5
 		)
+	await get_tree().create_timer(0.3).timeout
 	can_effect = true
+	effect_shader.hide()

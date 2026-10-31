@@ -13,6 +13,7 @@
 scroll_scale = Vector2(0.1, 0.1)
 scroll_offset = Vector2(2402, 377)
 repeat_size = Vector2(960, 0)
+repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D" unique_id=972640638]
 texture_filter = 1
@@ -22,6 +23,7 @@ texture = ExtResource("1_2igmd")
 scroll_scale = Vector2(0.2, 0.2)
 scroll_offset = Vector2(2402, 377)
 repeat_size = Vector2(960, 0)
+repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D3" unique_id=1027017508]
 texture_filter = 1
@@ -31,6 +33,7 @@ texture = ExtResource("2_dm1ej")
 scroll_scale = Vector2(0.4, 0.4)
 scroll_offset = Vector2(2402, 377)
 repeat_size = Vector2(960, 0)
+repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D2" unique_id=1666498646]
 texture_filter = 1
@@ -40,6 +43,7 @@ texture = ExtResource("3_gg22p")
 scroll_scale = Vector2(0.6, 0.6)
 scroll_offset = Vector2(2402, 377)
 repeat_size = Vector2(960, 0)
+repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D4" unique_id=74523939]
 texture_filter = 1
@@ -49,6 +53,7 @@ texture = ExtResource("4_4hion")
 scroll_scale = Vector2(0.6, 0.6)
 scroll_offset = Vector2(2402, 377)
 repeat_size = Vector2(960, 0)
+repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D5" unique_id=2019058099]
 texture_filter = 1
@@ -59,6 +64,7 @@ scroll_scale = Vector2(0.7, 0.7)
 scroll_offset = Vector2(2402, 377)
 repeat_size = Vector2(960, 0)
 autoscroll = Vector2(2.82, 0)
+repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D6" unique_id=2039710801]
 texture_filter = 1

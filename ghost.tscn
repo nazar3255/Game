@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c2rwhwyectnul"]
+
+[ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="1_v5pp4"]
+[ext_resource type="Shader" uid="uid://b4if2lxfonwo4" path="res://glow_ghost.gdshader" id="2_obmiq"]
+[ext_resource type="Texture2D" uid="uid://b8gfhrh0igm4f" path="res://Player/ghost-walk.png" id="3_xtt71"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kjq22"]
+shader = ExtResource("2_obmiq")
+shader_parameter/emission_color = Color(0.6904887, 0.8442034, 0.88782275, 1)
+shader_parameter/emission = 7.570000359575
+
+[node name="Enemy" unique_id=644901586 instance=ExtResource("1_v5pp4")]
+move_type = 1
+start_direction = 1
+height_of_flying = 70
+
+[node name="Sprite2D" parent="." index="9" unique_id=373658053]
+texture_filter = 1
+material = SubResource("ShaderMaterial_kjq22")
+texture = ExtResource("3_xtt71")
+hframes = 8

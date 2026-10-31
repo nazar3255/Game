@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" uid="uid://2adl6sweavf6" path="res://player_body.gd" id="1_xhfnw"]
 [ext_resource type="PackedScene" uid="uid://y3sknp0348vl" path="res://hud.tscn" id="2_e80uo"]
-[ext_resource type="Texture2D" uid="uid://bsk5c2j276y70" path="res://Player/main.png" id="3_e80uo"]
 [ext_resource type="Texture2D" uid="uid://by47dndied0wb" path="res://Player/Gemini_Generated_Image_639esn639esn639e.jpg" id="3_kne1u"]
+[ext_resource type="Shader" uid="uid://b4if2lxfonwo4" path="res://glow_ghost.gdshader" id="4_5ncpa"]
 [ext_resource type="Shader" uid="uid://bhd8evthwuu31" path="res://Player.gdshader" id="5_cxr5p"]
+[ext_resource type="Texture2D" uid="uid://cohuwdli8cuno" path="res://Player/Player_texture.png" id="6_5ncpa"]
 [ext_resource type="Shader" uid="uid://cfjpdxtal0dvt" path="res://global.gdshader" id="6_tdg3f"]
 [ext_resource type="Script" uid="uid://bfby53tcqflsj" path="res://color_rect_2.gd" id="7_dtqjt"]
 
@@ -25,13 +26,28 @@ shader_parameter/blur_radius = 7.53200031027
 shader_parameter/bokeh_strength = 0.64800003078
 shader_parameter/bokeh_threshold = 0.72800003458
 shader_parameter/bokeh_radius = 5.98000023655
-shader_parameter/bokeh_color = Color(1, 1, 1, 1)
+shader_parameter/bokeh_color = Color(1, 0.93233335, 0.71000004, 1)
 shader_parameter/bokeh_highlights = 2.0
 shader_parameter/bokeh_shadows = 0.0
 shader_parameter/vignette_strength = 1.0
 shader_parameter/grain_strength = 0.098000004655
 shader_parameter/scanline_strength = 0.0830000039425
 shader_parameter/flicker_strength = 0.30800001463
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5hph3"]
+shader = ExtResource("4_5ncpa")
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/emission = 1.0
+
+[sub_resource type="Gradient" id="Gradient_5ncpa"]
+offsets = PackedFloat32Array(0, 0.008, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_n1c6a"]
+gradient = SubResource("Gradient_5ncpa")
+fill = 1
+fill_from = Vector2(0.491453, 0.517094)
+fill_to = Vector2(0.13675214, 0.115384616)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kpjcp"]
 radius = 6.0
@@ -52,10 +68,10 @@ tracks/0/path = NodePath("slise_effect:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
 "update": 1,
-"values": [6]
+"values": []
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -64,13 +80,13 @@ tracks/1/path = NodePath("Sprite2D:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
 "update": 1,
-"values": [0]
+"values": []
 }
 
-[sub_resource type="Animation" id="Animation_e80uo"]
+[sub_resource type="Animation" id="Animation_hp6x6"]
 resource_name = "attack"
 length = 0.5
 loop_mode = 1
@@ -88,46 +104,11 @@ tracks/0/keys = {
 "values": [6, 7, 8, 9, 10, 11]
 }
 
-[sub_resource type="Animation" id="Animation_tdg3f"]
-resource_name = "jump"
-length = 0.6666667
+[sub_resource type="Animation" id="Animation_3tkgg"]
+resource_name = "climb"
+length = 0.083333336
 loop_mode = 1
-step = 0.16666667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [6, 7, 8, 9]
-}
-
-[sub_resource type="Animation" id="Animation_cxr5p"]
-resource_name = "run"
-loop_mode = 1
-step = 0.16666667
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5, 0.6666667, 0.8333334),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5]
-}
-
-[sub_resource type="Animation" id="Animation_dtqjt"]
-resource_name = "stand"
-length = 0.16666667
-loop_mode = 1
-step = 0.16666667
+step = 0.083333336
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -138,34 +119,73 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [0]
+"values": [18]
+}
+
+[sub_resource type="Animation" id="Animation_wi0c6"]
+resource_name = "run"
+length = 0.5
+loop_mode = 1
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25, 0.33333334, 0.4166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_5ncpa"]
+resource_name = "stand"
+length = 0.083333336
+loop_mode = 1
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [6, 7, 8, 9]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_cxr5p"]
 _data = {
 &"RESET": SubResource("Animation_kne1u"),
-&"attack": SubResource("Animation_e80uo"),
-&"jump": SubResource("Animation_tdg3f"),
-&"run": SubResource("Animation_cxr5p"),
-&"stand": SubResource("Animation_dtqjt")
+&"attack": SubResource("Animation_hp6x6"),
+&"climb": SubResource("Animation_3tkgg"),
+&"run": SubResource("Animation_wi0c6"),
+&"stand": SubResource("Animation_5ncpa")
 }
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_gkcsb"]
 shader = ExtResource("6_tdg3f")
-shader_parameter/saturation = 1.0
-shader_parameter/contrast = 1.12
-shader_parameter/brightness = 0.9850000230375
+shader_parameter/saturation = 0.5570000264575
+shader_parameter/contrast = 0.99600002356
+shader_parameter/brightness = 1.0450000258875
 shader_parameter/shadow_color = Color(0.6532, 0.65698665, 0.71, 1)
 shader_parameter/highlight_color = Color(0.6872, 0.656, 0.8, 1)
-shader_parameter/fog_strength = 0.0150000007125
-shader_parameter/fog_scale = 3.766000155135
-shader_parameter/fog_speed = 0.014000000665
-shader_parameter/fog_motion_strength = 2.1050000999875
-shader_parameter/fog_detail = 0.0
-shader_parameter/fog_softness = 2.0
-shader_parameter/fog_world_scale = 0.0010000000475
-shader_parameter/fog_color = Color(1, 0.06666666, 0, 1)
-shader_parameter/camera_world_position = Vector2(0, 0)
+shader_parameter/psychedelic_enabled = true
+shader_parameter/psychedelic_intensity = 0.0
+shader_parameter/wave_strength = 0.018
+shader_parameter/wave_frequency = 12.0
+shader_parameter/wave_speed = 1.2
+shader_parameter/organic_distortion = 0.012
+shader_parameter/distortion_scale = 4.0
+shader_parameter/swirl_strength = 0.45
+shader_parameter/dispersion_strength = 0.00800000038
+shader_parameter/psychedelic_saturation = 1.42000006745
+shader_parameter/psychedelic_colors = 0.25
+shader_parameter/color_cycle_speed = 0.35
 shader_parameter/vignette_strength = 0.3050000144875
 shader_parameter/vignette_radius = 0.97500004305262
 shader_parameter/vignette_center = Vector2(0.5, 0.5)
@@ -173,11 +193,15 @@ shader_parameter/grain_strength = 0.0
 shader_parameter/flicker_strength = 0.0
 shader_parameter/color_shift = 0.0
 
-[node name="player_body" type="CharacterBody2D" unique_id=1718144555 node_paths=PackedStringArray("slise_effect", "sprite", "attack_box", "reload_effect")]
+[node name="player_body" type="CharacterBody2D" unique_id=1718144555 node_paths=PackedStringArray("effect_shader", "global_shder", "light", "slise_effect", "sprite", "attack_box", "reload_effect")]
 collision_mask = 15
 script = ExtResource("1_xhfnw")
 hud = ExtResource("2_e80uo")
 effect_material = SubResource("ShaderMaterial_cxr5p")
+effect_shader = NodePath("CanvasLayer/ColorRect")
+gloving = SubResource("ShaderMaterial_5hph3")
+global_shder = NodePath("CanvasLayer/ColorRect2")
+light = NodePath("PointLight2D")
 slise_effect = NodePath("slise_effect")
 sprite = NodePath("Sprite2D")
 attack_box = NodePath("attack_box")
@@ -186,6 +210,12 @@ speed = 200
 jump_hight = -70
 dash_speed = 50
 
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1987316819]
+position = Vector2(-9.536743e-07, -13)
+scale = Vector2(1.59375, 1.5605469)
+energy = 0.0
+texture = SubResource("GradientTexture2D_n1c6a")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=40887738]
 position = Vector2(0, -13)
 shape = SubResource("CapsuleShape2D_kpjcp")
@@ -193,6 +223,9 @@ shape = SubResource("CapsuleShape2D_kpjcp")
 [node name="Camera2D" type="Camera2D" parent="." unique_id=972358351]
 offset = Vector2(0, -40)
 zoom = Vector2(5, 5)
+limit_left = -100
+limit_right = 3000
+limit_bottom = 300
 position_smoothing_speed = 7.0
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
@@ -247,17 +280,21 @@ frame = 6
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=113999188]
 libraries/ = SubResource("AnimationLibrary_cxr5p")
 
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="." unique_id=1179510961]
+libraries/ = SubResource("AnimationLibrary_cxr5p")
+
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1402499584]
 texture_filter = 3
-position = Vector2(0, -11)
-texture = ExtResource("3_e80uo")
+material = SubResource("ShaderMaterial_5hph3")
+position = Vector2(0, -16)
+texture = ExtResource("6_5ncpa")
 hframes = 6
-vframes = 2
+vframes = 4
+frame = 18
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=186230577]
 
 [node name="ColorRect2" type="ColorRect" parent="CanvasLayer" unique_id=1681833008 node_paths=PackedStringArray("fog_camera")]
-visible = false
 material = SubResource("ShaderMaterial_gkcsb")
 offset_right = 1440.0
 offset_bottom = 720.0
