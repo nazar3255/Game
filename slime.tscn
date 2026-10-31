@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bt54igrsplvhb"]
+
+[ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="1_5jc4t"]
+[ext_resource type="Texture2D" uid="uid://bktx4tu87u8tp" path="res://icon.svg" id="2_4l1t8"]
+
+[node name="slime" type="Node2D" unique_id=971284672]
+position = Vector2(30, 22)
+
+[node name="Enemy" parent="." unique_id=644901586 instance=ExtResource("1_5jc4t")]
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=2029979405]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_4l1t8")
