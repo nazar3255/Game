@@ -30,5 +30,3 @@ shape = SubResource("RectangleShape2D_g4v7s")
 [node name="Box" type="Sprite2D" parent="Path2D/PathFollow2D/StaticBody2D" unique_id=1745389161]
 position = Vector2(100, -1.0000087)
 texture = ExtResource("1_q06lf")
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=124690395]
