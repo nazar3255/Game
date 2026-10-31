@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bbld8th7jk8d3" path="res://Player/background/rock2.png" id="4_4hion"]
 [ext_resource type="Texture2D" uid="uid://br8qtas76154u" path="res://Player/background/rock1.png" id="5_rkjhp"]
 [ext_resource type="Texture2D" uid="uid://dgaheh27g0y64" path="res://Player/background/myst.png" id="6_drkcu"]
+[ext_resource type="AudioStream" uid="uid://c4mhb5l4pdwww" path="res://Player/Cave wind (long).mp3" id="7_gg22p"]
 
 [node name="bacground" type="Node2D" unique_id=485893461]
 
@@ -69,3 +70,7 @@ repeat_times = 3
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D6" unique_id=2039710801]
 texture_filter = 1
 texture = ExtResource("6_drkcu")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=2021742953]
+stream = ExtResource("7_gg22p")
+autoplay = true

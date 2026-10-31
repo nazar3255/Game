@@ -13,7 +13,6 @@ enum States {CALM, ATTACK}
 @export var attack_type: Types_of_attack
 var current_state: States = States.CALM
 
-
 enum BitePhase {NONE, WINDUP, DASH, RETREAT}
 var bite_phase: BitePhase = BitePhase.NONE
 var bite_time_left: float = 0.0

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bfjwxaq46xjyq"
+path="res://.godot/imported/Magic 2.mp3-cc85b4ef9363df707c11b08a1de4e836.mp3str"
+
+[deps]
+
+source_file="res://Player/Magic 2.mp3"
+dest_files=["res://.godot/imported/Magic 2.mp3-cc85b4ef9363df707c11b08a1de4e836.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -6,6 +6,15 @@ extends CharacterBody2D
 enum States {NORMAL, EFFECT}
 @export var hud: PackedScene
 var hud_instance: CanvasLayer
+
+@export var attack_sound: AudioStream
+@export var dash_sound: AudioStream
+@export var walk_sound: AudioStream
+@export var jump_sound: AudioStream
+@export var musik: AudioStream
+@export var happy_musik: AudioStream
+@export var happy_sound: AudioStream
+@export var magik_sound: AudioStream
 @export var effect_material: ShaderMaterial
 @onready var global_material: ShaderMaterial = $CanvasLayer/ColorRect2.material as ShaderMaterial
 @export var effect_shader: ColorRect
@@ -47,6 +56,12 @@ func set_ghosts_visible(value: bool) -> void:
 
 func psy_effect() -> void:
 	if can_effect:
+		$musik.stop()
+		$musik.stream = happy_musik
+		$musik.play()
+		$sound.stop()
+		$sound.stream = happy_sound
+		$sound.play()
 		hp += 20
 		hp = clamp(hp,1,100)
 		hud_instance.set_hp(hp)
@@ -70,12 +85,18 @@ func psy_effect() -> void:
 			0.0,
 			1.0
 		)
-		await get_tree().create_timer(1).timeout
+		await get_tree().create_timer(1.3).timeout
 		can_effect = true
+		$musik.stop()
+		$musik.stream = musik
+		$musik.play()
 		current_state = States.NORMAL
 
 func vision() -> void:
 	if can_effect and can_super:
+		$sound.stop()
+		$sound.stream = magik_sound
+		$sound.play()
 		can_super = false
 		effect()
 		speed *= 1.2
@@ -120,6 +141,11 @@ func take_boost() -> void:
 	velocity.x += direction * speed * 0.7
 		
 func attack() -> void:
+	$sound.stop()
+	$sound.stream = attack_sound
+	$sound.pitch_scale = randf_range(0.85, 1.15)
+	$sound.volume_db = randf_range(-5.0, 0.0)
+	$sound.play()
 	can_attack = false
 	$AnimationPlayer2.play("attack")
 	$attack_reload.start()
@@ -178,6 +204,9 @@ func _ready() -> void:
 	effect_shader.hide()
 	global_shader.show()
 	set_ghosts_visible(false)
+	$musik.stop()
+	$musik.stream = musik
+	$musik.play()
 	effect_material.set_shader_parameter("intensity", 0)
 
 	hp = max_hp
@@ -249,6 +278,11 @@ func _physics_process(delta: float) -> void:
 		if can_dash == true:
 			$AnimationPlayer.play("run")
 			is_dash = true
+			$sound.stop()
+			$sound.stream = dash_sound
+			$sound.pitch_scale = randf_range(0.85, 1.15)
+			$sound.volume_db = randf_range(-5.0, 0.0)
+			$sound.play()
 			$dash.start()
 			can_dash = false
 
