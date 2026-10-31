@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+@export var keys: int = 0
+
 
 enum States {NORMAL, EFFECT}
 @export var hud: PackedScene
@@ -239,3 +241,10 @@ func _on_relload_effect_timeout() -> void:
 			0.2
 		)
 	can_effect = true
+
+
+func _on_attack_box_area_entered(area: Area2D) -> void:
+	area.queue_free()
+	keys += 1
+	print(keys)
+	

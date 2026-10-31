@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="3_ihfcg"]
 [ext_resource type="Texture2D" uid="uid://bpevxd5thpnr7" path="res://Player/Medieval_tiles_free_2.0.png" id="5_j7kpp"]
 [ext_resource type="Shader" uid="uid://clejdwv5tw5hr" path="res://level_1.gdshader" id="6_bjebc"]
+[ext_resource type="PackedScene" uid="uid://bicld1emyluwa" path="res://key.tscn" id="7_j7kpp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ilcil"]
 size = Vector2(875, 20)
@@ -1478,3 +1479,8 @@ tile_set = SubResource("TileSet_ihfcg")
 texture_filter = 1
 material = SubResource("ShaderMaterial_rka8t")
 tile_set = SubResource("TileSet_ihfcg")
+
+[node name="Area2D" parent="." unique_id=1232771919 instance=ExtResource("7_j7kpp")]
+position = Vector2(589, -22)
+collision_layer = 7
+collision_mask = 7

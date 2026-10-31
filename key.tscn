@@ -47,12 +47,19 @@ animations = [{
 size = Vector2(12, 10)
 
 [node name="Area2D" type="Area2D" unique_id=1232771919]
+light_mask = 31
+visibility_layer = 31
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1280014618]
+light_mask = 1023
+visibility_layer = 1023
 texture_filter = 3
 sprite_frames = SubResource("SpriteFrames_yf5fn")
 animation = &"key"
-frame_progress = 0.19065197
+autoplay = "key"
+frame_progress = 0.52614826
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=606962304]
+light_mask = 31
+visibility_layer = 31
 shape = SubResource("RectangleShape2D_g4v7s")
