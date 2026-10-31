@@ -2,14 +2,63 @@
 
 [ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="1_v5pp4"]
 [ext_resource type="Shader" uid="uid://b4if2lxfonwo4" path="res://glow_ghost.gdshader" id="2_obmiq"]
-[ext_resource type="Texture2D" uid="uid://b8gfhrh0igm4f" path="res://Player/ghost-walk.png" id="3_xtt71"]
+[ext_resource type="Texture2D" uid="uid://b7grwfdmhxpr1" path="res://Player/ghost-32px_strip12.png" id="3_obmiq"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kjq22"]
 shader = ExtResource("2_obmiq")
 shader_parameter/emission_color = Color(0.6904887, 0.8442034, 0.88782275, 1)
-shader_parameter/emission = 7.570000359575
+shader_parameter/emission = 2.078000098705
 
-[node name="Enemy" unique_id=644901586 instance=ExtResource("1_v5pp4")]
+[sub_resource type="Animation" id="Animation_obmiq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_xtt71"]
+resource_name = "move"
+loop_mode = 1
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25, 0.33333334, 0.4166667, 0.5, 0.5833334, 0.6666667, 0.75, 0.8333334, 0.9166667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_kjq22"]
+_data = {
+&"RESET": SubResource("Animation_obmiq"),
+&"move": SubResource("Animation_xtt71")
+}
+
+[sub_resource type="Gradient" id="Gradient_obmiq"]
+offsets = PackedFloat32Array(0, 0.8739496)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ry2dv"]
+gradient = SubResource("Gradient_obmiq")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.90000004, 0.1)
+metadata/_snap_enabled = true
+
+[node name="Enemy" unique_id=644901586 groups=["ghost"] instance=ExtResource("1_v5pp4")]
 move_type = 1
 start_direction = 1
 height_of_flying = 70
@@ -17,5 +66,11 @@ height_of_flying = 70
 [node name="Sprite2D" parent="." index="9" unique_id=373658053]
 texture_filter = 1
 material = SubResource("ShaderMaterial_kjq22")
-texture = ExtResource("3_xtt71")
-hframes = 8
+texture = ExtResource("3_obmiq")
+hframes = 12
+
+[node name="AnimationPlayer" parent="." index="10" unique_id=872004681]
+libraries/ = SubResource("AnimationLibrary_kjq22")
+
+[node name="PointLight2D" type="PointLight2D" parent="." index="11" unique_id=528320395]
+texture = SubResource("GradientTexture2D_ry2dv")

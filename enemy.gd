@@ -88,6 +88,8 @@ func change_direction(dir=0) -> void:
 	bullet_spawn.position.x = direction * 8
 	wall_checker.target_position.x = direction * 40
 	find_player.target_position.x = length_of_view.x * direction
+	if sprite:
+		sprite.flip_h = direction < 0
 	can_turn = false
 	can_make_turn.start()
 
@@ -171,12 +173,13 @@ func end_flying_bite() -> void:
 	bite_phase = BitePhase.NONE
 	velocity = Vector2.ZERO
 	current_state = States.CALM
+	can_turn = true
 
 func start_retreat() -> void:
 	bite_phase = BitePhase.RETREAT
 	bite_time_left = bite_retreat_time
-	# відлітаємо від гравця й трохи вгору
-	var away_x = -sign(bite_dir.x) if bite_dir.x != 0 else -direction
+	var away_x: int = -int(sign(bite_dir.x)) if bite_dir.x != 0 else -direction
+	change_direction(away_x)
 	velocity = Vector2(away_x, -1).normalized() * speed * 2
 
 func update_flying_bite(delta: float) -> void:
@@ -190,8 +193,9 @@ func update_flying_bite(delta: float) -> void:
 				if not is_instance_valid(target):
 					end_flying_bite()
 					return
-				# ціляться в гравця в момент початку ривка
 				bite_dir = global_position.direction_to(target.global_position)
+				if bite_dir.x != 0:
+					change_direction(int(sign(bite_dir.x)))
 				velocity = bite_dir * speed * 3
 				bite_phase = BitePhase.DASH
 				bite_time_left = bite_dash_time
@@ -202,9 +206,9 @@ func update_flying_bite(delta: float) -> void:
 					bite_hit_done = true
 					if target.has_method("take_damage"):
 						target.take_damage(damage)
+						target.take_push(direction)
 					start_retreat()
 					return
-			# промазав / вперся в стіну чи підлогу
 			if bite_time_left <= 0.0 or is_on_wall() or is_on_floor():
 				start_retreat()
 
@@ -256,6 +260,9 @@ func attack() -> void:
 
 func die() -> void:
 	print("mob die")
+	var material = sprite.material as ShaderMaterial
+	material.set_shader_parameter("flash_intensity", 1.0)
+	await get_tree().create_timer(1.0).timeout
 	queue_free()
 
 func take_damage(amount) -> void:
@@ -329,6 +336,7 @@ func check_barriers() -> void:
 
 func move() -> void:
 	if current_state == States.CALM or is_chase:
+		$AnimationPlayer.play("move")
 		match move_type:
 			Types_of_move.NORMAL:
 				velocity.x = speed * direction

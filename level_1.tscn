@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://cxfh23rshjwh3" path="res://get_cought_point.tscn" id="3_hn12h"]
 [ext_resource type="Texture2D" uid="uid://bpevxd5thpnr7" path="res://Player/Medieval_tiles_free_2.0.png" id="5_j7kpp"]
 [ext_resource type="Shader" uid="uid://clejdwv5tw5hr" path="res://level_1.gdshader" id="6_bjebc"]
+[ext_resource type="PackedScene" uid="uid://cjqbbk6bbnyq7" path="res://musroom.tscn" id="8_5rr72"]
+[ext_resource type="PackedScene" uid="uid://c2rwhwyectnul" path="res://ghost.tscn" id="8_bjebc"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5hph3"]
 shader = ExtResource("3_5hph3")
@@ -4214,3 +4216,9 @@ tile_set = SubResource("TileSet_ihfcg")
 visibility_layer = 16
 position = Vector2(56, -32)
 damage = 20
+
+[node name="Enemy" parent="." unique_id=644901586 instance=ExtResource("8_bjebc")]
+position = Vector2(-21, -61)
+
+[node name="Area2D" parent="." unique_id=764862550 instance=ExtResource("8_5rr72")]
+position = Vector2(195, -7)

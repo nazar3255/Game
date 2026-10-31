@@ -63,7 +63,7 @@ texture = ExtResource("5_rkjhp")
 scroll_scale = Vector2(0.7, 0.7)
 scroll_offset = Vector2(2402, 377)
 repeat_size = Vector2(960, 0)
-autoscroll = Vector2(2.82, 0)
+autoscroll = Vector2(5.78, 0)
 repeat_times = 3
 
 [node name="Sprite2D" type="Sprite2D" parent="Parallax2D6" unique_id=2039710801]

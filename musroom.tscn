@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://cjqbbk6bbnyq7"]
+
+[ext_resource type="Script" uid="uid://cq0yj0pstwta3" path="res://area_2d.gd" id="1_4oxto"]
+[ext_resource type="Texture2D" uid="uid://c4hhxjkgp24ac" path="res://Player/mushroom anim_frames (2).png" id="2_i0ann"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ry2dv"]
+radius = 8.0
+
+[sub_resource type="Animation" id="Animation_qgy5p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_lmrle"]
+resource_name = "rotate"
+length = 1.0000166964694857
+loop_mode = 1
+step = 0.16666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5, 0.6666667, 0.8333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_wbma1"]
+_data = {
+&"RESET": SubResource("Animation_qgy5p"),
+&"rotate": SubResource("Animation_lmrle")
+}
+
+[sub_resource type="Gradient" id="Gradient_lc84f"]
+offsets = PackedFloat32Array(0.014005602, 0.75910366)
+colors = PackedColorArray(0.48766673, 1, 0.42000002, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ry2dv"]
+gradient = SubResource("Gradient_lc84f")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0)
+metadata/_snap_enabled = true
+
+[node name="Area2D" type="Area2D" unique_id=764862550]
+script = ExtResource("1_4oxto")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1515458591]
+shape = SubResource("CircleShape2D_ry2dv")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=994708728]
+texture_filter = 1
+position = Vector2(-1, 0)
+texture = ExtResource("2_i0ann")
+hframes = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=598657006]
+libraries/ = SubResource("AnimationLibrary_wbma1")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=604025015]
+visible = false
+position = Vector2(-1, 0)
+color = Color(0.45850003, 1, 0.43, 1)
+texture = SubResource("GradientTexture2D_ry2dv")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

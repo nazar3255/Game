@@ -7,9 +7,10 @@ enum States {NORMAL, EFFECT}
 @export var hud: PackedScene
 var hud_instance: CanvasLayer
 @export var effect_material: ShaderMaterial
+@onready var global_material: ShaderMaterial = $CanvasLayer/ColorRect2.material as ShaderMaterial
 @export var effect_shader: ColorRect
 @export var gloving: ShaderMaterial
-@export var global_shder: ColorRect
+@export var global_shader: ColorRect
 @export var light: PointLight2D
 @export var slise_effect: Sprite2D
 @export var sprite: Sprite2D
@@ -34,10 +35,53 @@ var can_move: bool = true
 var hp: int
 var can_effect: bool = true
 var current_state: States = States.NORMAL
+var can_super: bool = true
 
 
 func is_player() -> bool:
 	return true
+
+func set_ghosts_visible(value: bool) -> void:
+	for ghost in get_tree().get_nodes_in_group("ghost"):
+		ghost.visible = value
+
+func psy_effect() -> void:
+	if can_effect:
+		hp += 20
+		hp = clamp(hp,1,100)
+		hud_instance.set_hp(hp)
+		can_effect = false
+		current_state = States.EFFECT
+		global_material.set_shader_parameter("psychedelic_enabled", true)
+		var tween := create_tween()
+		tween.tween_method(
+			func(value: float) -> void:
+				global_material.set_shader_parameter("psychedelic_intensity", value),
+			0.0,
+			1.0,
+			0.5
+		)
+		await get_tree().create_timer(7.5).timeout
+		var tween1 := create_tween()
+		tween1.tween_method(
+			func(value: float) -> void:
+				global_material.set_shader_parameter("psychedelic_intensity", value),
+			1.0,
+			0.0,
+			1.0
+		)
+		await get_tree().create_timer(1).timeout
+		can_effect = true
+		current_state = States.NORMAL
+
+func vision() -> void:
+	if can_effect and can_super:
+		can_super = false
+		effect()
+		speed *= 1.2
+		jump_hight *= 1.2
+		damage *= 1.2
+		$super.start()
 
 func effect(color: Color = Color("#85aec1"), time: float = 7) -> void:
 	if can_effect:
@@ -53,6 +97,7 @@ func effect(color: Color = Color("#85aec1"), time: float = 7) -> void:
 			1.0,
 			0.2
 		)
+		set_ghosts_visible(true)
 		current_state = States.EFFECT
 		can_effect = false
 		reload_effect.start(time)
@@ -131,7 +176,8 @@ func move(dir, delta) -> void:
 
 func _ready() -> void:
 	effect_shader.hide()
-	global_shder.show()
+	global_shader.show()
+	set_ghosts_visible(false)
 	effect_material.set_shader_parameter("intensity", 0)
 
 	hp = max_hp
@@ -153,6 +199,10 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if not is_cought:
 		apply_gravity(delta)
+	if direction == 1:
+		sprite.flip_h = false
+	else:
+		sprite.flip_h = true
 
 	if Input.is_physical_key_pressed(KEY_ESCAPE):
 		if get_tree().paused == false:
@@ -216,12 +266,19 @@ func _physics_process(delta: float) -> void:
 		is_cought = false
 
 	move_and_slide()
-	if Input.is_action_just_pressed("attack()") and can_attack:
+	if Input.is_action_just_pressed("attack()") and can_attack and not is_cought:
 		attack()
 
 	if Input.is_action_just_pressed("vision_effect()") and can_attack:
 		# effect(Color("#50e56b"), 0.3)
-		effect()
+		vision()	
+	if not is_on_floor() and not Input.is_action_pressed("left()") and not Input.is_action_pressed("right()"):
+		if not is_cought:
+			if velocity.y > 0:
+				$AnimationPlayer.play("down")
+			else:
+				$AnimationPlayer.play("up")
+
 
 
 func _on_dash_timeout() -> void:
@@ -259,9 +316,15 @@ func _on_relload_effect_timeout() -> void:
 			0.0,
 			0.5
 		)
-	await get_tree().create_timer(0.3).timeout
+	await get_tree().create_timer(0.2).timeout
 	can_effect = true
 	effect_shader.hide()
+	set_ghosts_visible(false)
+	if speed != 250:
+		speed /= 1.2
+		jump_hight /= 1.2
+		damage /= 1.2
+
 
 
 
@@ -270,3 +333,7 @@ func _on_attack_box_area_entered(area: Area2D) -> void:
 	keys += 1
 	print(keys)
 	
+
+
+func _on_super_timeout() -> void:
+	can_super = true

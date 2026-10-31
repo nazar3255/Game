@@ -3,10 +3,14 @@
 [ext_resource type="Script" uid="uid://bnp5g5cnppn6i" path="res://enemy.gd" id="1_7k104"]
 [ext_resource type="PackedScene" uid="uid://bodyjjn3pcpg5" path="res://bullet.tscn" id="2_4gyqm"]
 [ext_resource type="PackedScene" uid="uid://blrukf6sr1di8" path="res://trowble.tscn" id="3_qi2p4"]
-[ext_resource type="Texture2D" uid="uid://bktx4tu87u8tp" path="res://icon.svg" id="4_iifgy"]
+[ext_resource type="Shader" uid="uid://bls8bqvldr485" path="res://enemy.gdshader" id="4_iifgy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ry2dv"]
 size = Vector2(16, 16)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5ncpa"]
+shader = ExtResource("4_iifgy")
+shader_parameter/flash_intensity = 0.0
 
 [node name="Enemy" type="CharacterBody2D" unique_id=644901586 node_paths=PackedStringArray("wall_checker", "check_proces", "can_make_turn", "reload_attack", "player_check", "find_player", "bullet_spawn", "sprite")]
 collision_layer = 2
@@ -61,11 +65,9 @@ one_shot = true
 position = Vector2(8, -8)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=373658053]
+material = SubResource("ShaderMaterial_5ncpa")
 
-[node name="Icon" type="Sprite2D" parent="." unique_id=1467278891]
-position = Vector2(1.1920929e-07, 2.3841858e-07)
-scale = Vector2(0.125, 0.125)
-texture = ExtResource("4_iifgy")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=872004681]
 
 [connection signal="timeout" from="can_turn" to="." method="_on_can_turn_timeout"]
 [connection signal="timeout" from="check_proces" to="." method="_on_check_proces_timeout"]
