@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://ditkwov0pkmq0"]
+
+[ext_resource type="Texture2D" uid="uid://5ciig3jiva50" path="res://tiles/menu_back_image.jpeg" id="1_vbts7"]
+[ext_resource type="Texture2D" uid="uid://dc4d6eetmdauj" path="res://tiles/play_butt.png" id="2_hko7e"]
+[ext_resource type="Texture2D" uid="uid://cmw8lm55p8cjw" path="res://tiles/play_butt_hover.png" id="3_n6o5i"]
+[ext_resource type="Texture2D" uid="uid://c1ymbt0esbndw" path="res://tiles/exit_butt.png" id="4_gnsb0"]
+[ext_resource type="Texture2D" uid="uid://dc0jk3xwsw5lj" path="res://tiles/exit_butt_hover.png" id="5_ibaye"]
+[ext_resource type="Texture2D" uid="uid://fkxwvv6kdv15" path="res://tiles/particle.png" id="6_gnsb0"]
+
+[sub_resource type="Curve" id="Curve_g4v7s"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.462766, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[node name="Menu" type="Control" unique_id=547570597]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=809455735]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_vbts7")
+expand_mode = 2
+
+[node name="Play" type="TextureButton" parent="." unique_id=135277530]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -131.0
+offset_right = 501.0
+offset_bottom = 131.0
+grow_vertical = 2
+texture_normal = ExtResource("2_hko7e")
+texture_hover = ExtResource("3_n6o5i")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Exit" type="TextureButton" parent="." unique_id=1994300847]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -262.0
+offset_right = 501.0
+grow_vertical = 0
+texture_normal = ExtResource("4_gnsb0")
+texture_hover = ExtResource("5_ibaye")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="." unique_id=2053522513]
+modulate = Color(1, 1, 1, 0.47058824)
+position = Vector2(731, 318)
+amount = 60
+texture = ExtResource("6_gnsb0")
+lifetime = 9.0
+emission_shape = 3
+emission_rect_extents = Vector2(700, 400)
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+scale_amount_min = 0.15
+scale_amount_max = 0.15
+scale_amount_curve = SubResource("Curve_g4v7s")
+color = Color(0.24705882, 1, 1, 1)
