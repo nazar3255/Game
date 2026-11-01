@@ -242,6 +242,7 @@ func bite() -> void:
 func attack() -> void:
 	current_state = States.ATTACK
 	if can_attack and attack_type != Types_of_attack.EXPLOSION:
+		$sound.play()
 		can_attack = false
 		await get_tree().create_timer(0.2).timeout
 		reload_attack.start()

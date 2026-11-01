@@ -8,6 +8,8 @@ enum States {NORMAL, EFFECT}
 var hud_instance: CanvasLayer
 
 @export var attack_sound: AudioStream
+@export var damage_sound: AudioStream
+@export var pic_sound: AudioStream
 @export var dash_sound: AudioStream
 @export var walk_sound: AudioStream
 @export var jump_sound: AudioStream
@@ -45,11 +47,24 @@ var hp: int
 var can_effect: bool = true
 var current_state: States = States.NORMAL
 var can_super: bool = true
+var keys1: int = 0
+var can_open: bool = false
+
 
 
 func is_player() -> bool:
 	return true
 
+func key() ->void:
+	if keys1 < 3:
+		keys1 += 1
+		$sound.stop()
+		$sound.stream = pic_sound
+		$sound.play()
+		print(keys1)
+	if keys1 == 3:
+		can_open = true
+		print(can_open)
 func set_ghosts_visible(value: bool) -> void:
 	for ghost in get_tree().get_nodes_in_group("ghost"):
 		ghost.visible = value
@@ -80,7 +95,8 @@ func psy_effect() -> void:
 		var tween1 := create_tween()
 		tween1.tween_method(
 			func(value: float) -> void:
-				global_material.set_shader_parameter("psychedelic_intensity", value),
+				global_material.set_shader_parameter("psychedelic_intensity", value)
+				global_material.set_shader_parameter("brightnes", value * 2),
 			1.0,
 			0.0,
 			1.0
@@ -156,11 +172,35 @@ func attack() -> void:
 			i.take_damage(damage)
 	
 func take_damage(amount) -> void:
+	$sound.stop()
+	$sound.stream = damage_sound
+	$sound.play()
 	hp -= amount
 	hp = clamp(hp, 0, max_hp)
+	if hp == 0:
+		await get_tree().create_timer(0.2).timeout
+		get_tree().change_scene_to_file("res://menu_scene.tscn")
+		return
 	#оновлений варіант
 	hud_instance.set_hp(hp)
 	print(hp)
+	var tween = create_tween()
+	tween.tween_method(
+		func(value) -> void:
+			gloving.set_shader_parameter("emission", value),
+		1.0,
+		4.0,
+		0.2
+	)
+	await get_tree().create_timer(0.2).timeout
+	var tween1 = create_tween()
+	tween1.tween_method(
+		func(value) -> void:
+			gloving.set_shader_parameter("emission", value),
+		4.0,
+		1.0,
+		0.2
+	)
 
 func apply_gravity(delta: float) -> void:
 

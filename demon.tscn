@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://srs5lin3kfs2"]
+
+[ext_resource type="PackedScene" uid="uid://c2rwhwyectnul" path="res://ghost.tscn" id="1_vdycq"]
+[ext_resource type="Shader" uid="uid://cn888qhpm483x" path="res://new_shader.gdshader" id="2_vio0h"]
+[ext_resource type="Texture2D" uid="uid://bri2q023ebl13" path="res://Player/fire_imp_sheet.png" id="3_hf2h4"]
+[ext_resource type="AudioStream" uid="uid://drcdgxu0pxxyn" path="res://Player/freesound_community-possessed-laugh-94851.mp3" id="4_vio0h"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ttn6t"]
+shader = ExtResource("2_vio0h")
+shader_parameter/emission_color = Color(1, 1, 1, 1)
+shader_parameter/emission = 1.58400007524
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_hf2h4"]
+random_pitch = 1.0699178
+random_volume_offset_db = 5.78
+streams_count = 1
+stream_0/stream = ExtResource("4_vio0h")
+
+[node name="Enemy" unique_id=644901586 instance=ExtResource("1_vdycq")]
+move_type = 0
+start_direction = 0
+limits_only_x = Vector2(0, 0)
+speed = 25
+explosion_damage = 60
+
+[node name="CollisionShape2D" parent="." index="0" unique_id=1997042106]
+position = Vector2(-0.305, 0)
+scale = Vector2(0.565, 0.885)
+
+[node name="bullet_spawn" parent="." index="8" unique_id=276558598]
+position = Vector2(6, -5)
+
+[node name="Sprite2D" parent="." index="9" unique_id=373658053]
+material = SubResource("ShaderMaterial_ttn6t")
+texture = ExtResource("3_hf2h4")
+hframes = 7
+vframes = 5
+
+[node name="PointLight2D" parent="." index="11" unique_id=528320395]
+position = Vector2(1, 0)
+color = Color(0.96, 0.96, 0.96, 1)
+
+[node name="sound" parent="." index="12" unique_id=297421681]
+stream = SubResource("AudioStreamRandomizer_hf2h4")
+pitch_scale = 1.63

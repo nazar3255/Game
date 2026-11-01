@@ -1,15 +1,16 @@
 [gd_scene format=3 uid="uid://crbm64cfb5tmo"]
 
 [ext_resource type="Script" uid="uid://davs3ki0grrx0" path="res://path_follow_2d.gd" id="1_hrpga"]
-[ext_resource type="Texture2D" uid="uid://bm6o1uodurm0b" path="res://tiles/box.png" id="1_q06lf"]
+[ext_resource type="Texture2D" uid="uid://cp4nndd2jwsqp" path="res://Player/box.png" id="2_hrpga"]
 
 [sub_resource type="Curve2D" id="Curve2D_hrpga"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, -66, -1, 0, 0, 0, 0, 77, -1)
+"points": PackedVector2Array(0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 152, 0)
 }
 point_count = 2
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
+size = Vector2(20, 16)
 
 [node name="Node2D" type="Node2D" unique_id=386136782]
 
@@ -17,16 +18,19 @@ point_count = 2
 curve = SubResource("Curve2D_hrpga")
 
 [node name="PathFollow2D" type="PathFollow2D" parent="Path2D" unique_id=1558263027]
-position = Vector2(-66, -1)
+position = Vector2(-64, 0)
 loop = false
 script = ExtResource("1_hrpga")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Path2D/PathFollow2D" unique_id=501803449]
+[node name="StaticBody2D" type="CharacterBody2D" parent="Path2D/PathFollow2D" unique_id=1456038744]
+position = Vector2(2.0045662, 0.99081534)
+collision_layer = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Path2D/PathFollow2D/StaticBody2D" unique_id=476514925]
-position = Vector2(99, -8.654855e-06)
+position = Vector2(98, 1)
 shape = SubResource("RectangleShape2D_g4v7s")
 
-[node name="Box" type="Sprite2D" parent="Path2D/PathFollow2D/StaticBody2D" unique_id=1745389161]
-position = Vector2(100, -1.0000087)
-texture = ExtResource("1_q06lf")
+[node name="Sprite2D" type="Sprite2D" parent="Path2D/PathFollow2D/StaticBody2D" unique_id=1519163907]
+texture_filter = 1
+position = Vector2(98, 1)
+texture = ExtResource("2_hrpga")

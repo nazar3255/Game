@@ -3,6 +3,8 @@
 [ext_resource type="PackedScene" uid="uid://dvko7j627j57n" path="res://enemy.tscn" id="1_v5pp4"]
 [ext_resource type="Shader" uid="uid://b4if2lxfonwo4" path="res://glow_ghost.gdshader" id="2_obmiq"]
 [ext_resource type="Texture2D" uid="uid://b7grwfdmhxpr1" path="res://Player/ghost-32px_strip12.png" id="3_obmiq"]
+[ext_resource type="AudioStream" uid="uid://t0y4rxq1cbmj" path="res://Player/Gets damaged or idle sounds.mp3" id="4_xtt71"]
+[ext_resource type="AudioStream" uid="uid://d33vail5lgaa3" path="res://Player/Attack.mp3" id="5_kjq22"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kjq22"]
 shader = ExtResource("2_obmiq")
@@ -58,6 +60,15 @@ fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.90000004, 0.1)
 metadata/_snap_enabled = true
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ry2dv"]
+random_pitch = 1.0699178
+random_volume_offset_db = 5.78
+streams_count = 2
+stream_0/stream = ExtResource("4_xtt71")
+stream_0/weight = 1.59
+stream_1/stream = ExtResource("5_kjq22")
+stream_1/weight = 0.5
+
 [node name="Enemy" unique_id=644901586 groups=["ghost"] instance=ExtResource("1_v5pp4")]
 move_type = 1
 start_direction = 1
@@ -74,3 +85,7 @@ libraries/ = SubResource("AnimationLibrary_kjq22")
 
 [node name="PointLight2D" type="PointLight2D" parent="." index="11" unique_id=528320395]
 texture = SubResource("GradientTexture2D_ry2dv")
+
+[node name="sound" type="AudioStreamPlayer2D" parent="." index="12" unique_id=297421681]
+stream = SubResource("AudioStreamRandomizer_ry2dv")
+max_distance = 1005.0

@@ -7,9 +7,11 @@
 [ext_resource type="AudioStream" uid="uid://crv0u50rmhj1v" path="res://Player/dheerajakam4jor-swoosh-sound-effect-for-fight-scenes-or-transitions-3-149888.mp3" id="3_l6ohk"]
 [ext_resource type="AudioStream" uid="uid://bicjiiponcrm8" path="res://Player/Dark Ambience.mp3" id="3_wi0c6"]
 [ext_resource type="Shader" uid="uid://b4if2lxfonwo4" path="res://glow_ghost.gdshader" id="4_5ncpa"]
+[ext_resource type="AudioStream" uid="uid://54jxh5m18t46" path="res://Player/minecraft_hit_soundmp3converter.mp3" id="4_d6rpx"]
 [ext_resource type="AudioStream" uid="uid://crkm45hgpc1jn" path="res://Player/soundreality-whoosh-sizzling-390708.mp3" id="4_oudfo"]
 [ext_resource type="AudioStream" uid="uid://cdn07nwsjdtk3" path="res://Player/Magic.mp3" id="5_3tkgg"]
 [ext_resource type="Shader" uid="uid://bhd8evthwuu31" path="res://Player.gdshader" id="5_cxr5p"]
+[ext_resource type="AudioStream" uid="uid://bx40eu3dqj4ty" path="res://Player/minecraft_item_pickup.mp3" id="5_r3kul"]
 [ext_resource type="Texture2D" uid="uid://cohuwdli8cuno" path="res://Player/Player_texture.png" id="6_5ncpa"]
 [ext_resource type="AudioStream" uid="uid://bfjwxaq46xjyq" path="res://Player/Magic 2.mp3" id="6_l6ohk"]
 [ext_resource type="Shader" uid="uid://cfjpdxtal0dvt" path="res://global.gdshader" id="6_tdg3f"]
@@ -248,8 +250,8 @@ shader = ExtResource("6_tdg3f")
 shader_parameter/saturation = 0.68
 shader_parameter/contrast = 0.9350000206625
 shader_parameter/brightness = 0.88
-shader_parameter/shadow_color = Color(0.71000004, 0.77766675, 1, 1)
-shader_parameter/highlight_color = Color(0.7005222, 0.8108511, 0.8848369, 1)
+shader_parameter/shadow_color = Color(0.42676514, 0.5642122, 0.51616424, 1)
+shader_parameter/highlight_color = Color(1, 0.90466666, 0.56, 1)
 shader_parameter/psychedelic_enabled = true
 shader_parameter/psychedelic_intensity = 0.0
 shader_parameter/wave_strength = 0.018
@@ -280,6 +282,8 @@ collision_mask = 15
 script = ExtResource("1_xhfnw")
 hud = ExtResource("2_e80uo")
 attack_sound = ExtResource("3_l6ohk")
+damage_sound = ExtResource("4_d6rpx")
+pic_sound = ExtResource("5_r3kul")
 dash_sound = ExtResource("4_oudfo")
 musik = ExtResource("3_wi0c6")
 happy_musik = ExtResource("3_5ncpa")

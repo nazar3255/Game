@@ -46,12 +46,12 @@ _data = {
 }
 
 [sub_resource type="Gradient" id="Gradient_lc84f"]
-offsets = PackedFloat32Array(0.014005602, 0.75910366)
-colors = PackedColorArray(0.48766673, 1, 0.42000002, 1, 0, 0, 0, 1)
+offsets = PackedFloat32Array(0.014005602, 0.8496732)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ry2dv"]
 gradient = SubResource("Gradient_lc84f")
-fill = 1
+fill = 2
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0, 0)
 metadata/_snap_enabled = true
@@ -72,7 +72,6 @@ hframes = 6
 libraries/ = SubResource("AnimationLibrary_wbma1")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=604025015]
-visible = false
 position = Vector2(-1, 0)
 color = Color(0.45850003, 1, 0.43, 1)
 texture = SubResource("GradientTexture2D_ry2dv")

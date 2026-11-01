@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://bicld1emyluwa"]
 
+[ext_resource type="Script" uid="uid://b75jt7827j6gp" path="res://key.gd" id="1_p0yg6"]
 [ext_resource type="Texture2D" uid="uid://ddo2dnpb4d641" path="res://tiles/Key.png" id="1_up4cr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p0yg6"]
@@ -46,9 +47,20 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
 size = Vector2(12, 10)
 
+[sub_resource type="Gradient" id="Gradient_krfvd"]
+offsets = PackedFloat32Array(0, 0.9346405)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ry2dv"]
+gradient = SubResource("Gradient_krfvd")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+metadata/_snap_enabled = true
+
 [node name="Area2D" type="Area2D" unique_id=1232771919]
 light_mask = 31
 visibility_layer = 31
+script = ExtResource("1_p0yg6")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1280014618]
 light_mask = 1023
@@ -63,3 +75,8 @@ frame_progress = 0.52614826
 light_mask = 31
 visibility_layer = 31
 shape = SubResource("RectangleShape2D_g4v7s")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=1914518487]
+texture = SubResource("GradientTexture2D_ry2dv")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
